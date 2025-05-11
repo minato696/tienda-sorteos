@@ -1,23 +1,29 @@
-// app/admin/layout.tsx
+// app/admin/layout.tsx (versión para desarrollo)
 import { ReactNode } from 'react';
-import { redirect } from 'next/navigation';
 import AdminSidebar from '@/app/components/admin/AdminSidebar';
 import AdminHeader from '@/app/components/admin/AdminHeader';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/app/lib/auth';
+// Comentamos estas líneas temporalmente
+// import { getServerSession } from 'next-auth/next';
+// import { authOptions } from '@/app/lib/auth';
 
 export default async function AdminLayout({
   children,
 }: {
   children: ReactNode;
 }) {
-  // Verificar autenticación en el servidor
-  const session = await getServerSession(authOptions);
+  // Comentamos el código de autenticación
+  // const session = await getServerSession(authOptions);
+  // if (!session || session.user.role !== 'ADMIN') {
+  //   redirect('/login');
+  // }
   
-  // Verificar si el usuario es administrador
-  if (!session || session.user.role !== 'ADMIN') {
-    redirect('/login');
-  }
+  // Usuario simulado para pruebas
+  const mockUser = {
+    name: 'Admin Temporal',
+    email: 'admin@example.com',
+    role: 'ADMIN',
+    image: null
+  };
   
   return (
     <div className="flex h-screen bg-gray-100">
@@ -26,7 +32,7 @@ export default async function AdminLayout({
       
       {/* Contenido principal */}
       <div className="flex flex-col flex-1 overflow-hidden">
-        <AdminHeader user={session.user} />
+        <AdminHeader user={mockUser} />
         
         <main className="flex-1 overflow-y-auto p-4">
           {children}

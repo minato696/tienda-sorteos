@@ -1,12 +1,12 @@
 // app/lib/prisma.ts
 import { PrismaClient } from '@prisma/client';
 
-// PrismaClient es adjuntado al objeto global en desarrollo para prevenir
-// múltiples instancias del Prisma Client en desarrollo
-const globalForPrisma = global as unknown as {
-  prisma: PrismaClient | undefined;
-};
+const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
-export const db = globalForPrisma.prisma || new PrismaClient();
+export const prisma =
+  globalForPrisma.prisma ||
+  new PrismaClient({
+    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+  });
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db;
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;

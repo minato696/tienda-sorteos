@@ -14,6 +14,7 @@ import {
   UserCog
 } from 'lucide-react';
 
+// app/components/admin/AdminSidebar.tsx (fragmento)
 const menuItems = [
   { title: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
   { title: 'Sorteos', href: '/admin/sorteos', icon: Ticket },

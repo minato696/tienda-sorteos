@@ -1,3 +1,4 @@
+// schema.prisma (versión completa)
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,6 +8,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Administradores del sistema
 model Admin {
   id        Int      @id @default(autoincrement())
   email     String   @unique
@@ -14,6 +16,18 @@ model Admin {
   creadoEn  DateTime @default(now())
 }
 
+// Usuarios con sistema de roles
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String?
+  role      String   @default("USER")
+  image     String?
+  createdAt DateTime @default(now())
+}
+
+// Sorteos disponibles
 model Sorteo {
   id            Int       @id @default(autoincrement())
   titulo        String
@@ -23,34 +37,98 @@ model Sorteo {
   fechaSorteo   DateTime
   stockTotal    Int
   stockVendido  Int       @default(0)
+  status        String    @default("UPCOMING") // UPCOMING, ACTIVE, FINISHED, CANCELLED
   creadoEn      DateTime  @default(now())
+  
+  // Relaciones
   tickets       Ticket[]
-
   ganadorId     Int?      @unique
   ganador       Ticket?   @relation("GanadorSorteo", fields: [ganadorId], references: [id])
+  transacciones Transaccion[]
 }
 
+// Participantes en los sorteos
 model Participante {
-  id           Int      @id @default(autoincrement())
-  dni          String
+  id           Int           @id @default(autoincrement())
+  dni          String        @unique
   nombres      String
   apellidos    String
   telefono     String
   email        String
   departamento String
+  creadoEn     DateTime      @default(now())
+  
+  // Relaciones
   tickets      Ticket[]
-  creadoEn     DateTime @default(now())
+  transacciones Transaccion[]
 }
 
+// Tickets comprados
 model Ticket {
   id             Int            @id @default(autoincrement())
   codigo         String         @unique
-  sorteo         Sorteo         @relation(fields: [sorteoId], references: [id])
   sorteoId       Int
-  participante   Participante   @relation(fields: [participanteId], references: [id])
   participanteId Int
   compradoEn     DateTime       @default(now())
-
-  // Relación inversa al sorteo ganador
+  status         String         @default("RESERVED") // RESERVED, PAID, CANCELLED
+  
+  // Relaciones
+  sorteo         Sorteo         @relation(fields: [sorteoId], references: [id])
+  participante   Participante   @relation(fields: [participanteId], references: [id])
   sorteoGanador  Sorteo?        @relation("GanadorSorteo")
+  transaccion    Transaccion?
+}
+
+// Transacciones de pago
+model Transaccion {
+  id              Int          @id @default(autoincrement())
+  referencia      String       @unique
+  monto           Float
+  estado          String       @default("PENDIENTE") // PENDIENTE, COMPLETADO, FALLIDO, REEMBOLSADO
+  metodoPago      String       @default("YAPE") // YAPE, TRANSFERENCIA, TARJETA
+  comprobantePago String?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  
+  // Relaciones
+  participanteId  Int
+  participante    Participante @relation(fields: [participanteId], references: [id])
+  sorteoId        Int
+  sorteo          Sorteo       @relation(fields: [sorteoId], references: [id])
+  tickets         Ticket[]
+}
+
+// Contenido de la página web
+model Contenido {
+  id              Int          @id @default(autoincrement())
+  tipo            String       // BANNER, SECCION, FOOTER, FAQ, ETC
+  titulo          String
+  descripcion     String?
+  imagen          String?
+  orden           Int          @default(1)
+  activo          Boolean      @default(true)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
+
+// Configuración del sistema
+model Configuracion {
+  id              Int          @id @default(autoincrement())
+  clave           String       @unique
+  valor           String
+  descripcion     String?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
+
+// Notificaciones y correos enviados
+model Notificacion {
+  id              Int          @id @default(autoincrement())
+  tipo            String       // EMAIL, SMS, PUSH
+  destinatario    String
+  asunto          String
+  contenido       String
+  enviado         Boolean      @default(false)
+  fechaEnvio      DateTime?
+  createdAt       DateTime     @default(now())
 }

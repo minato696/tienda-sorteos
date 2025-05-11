@@ -10,6 +10,7 @@ type AdminHeaderProps = {
     name?: string | null;
     email?: string | null;
     image?: string | null;
+    role?: string;
   };
 };
 
@@ -62,12 +63,12 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
             {showUserMenu && (
               <div className="absolute right-0 w-48 mt-2 bg-white border rounded-lg shadow-lg">
                 <div className="py-2 px-4 border-b">
-                  <p className="text-sm font-medium text-gray-900">{user.name}</p>
+                  <p className="text-sm font-medium text-gray-900">{user.name || "Administrador"}</p>
                   <p className="text-xs text-gray-500">{user.email}</p>
                 </div>
                 <div className="py-1">
                   <button
-                    onClick={() => signOut()}
+                    onClick={() => signOut({ callbackUrl: "/login" })}
                     className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
                   >
                     <LogOut className="w-4 h-4 mr-2" />

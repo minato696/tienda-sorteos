@@ -1,4 +1,4 @@
-// app/components/admin/RaffleTable.tsx
+// app/components/admin/RaffleTable.tsx (actualizado)
 import Link from 'next/link';
 import Image from 'next/image';
 import { prisma } from '@/app/lib/prisma';
@@ -7,13 +7,10 @@ import { Eye, Edit, Trash, Calendar } from 'lucide-react';
 import RaffleStatusBadge from './RaffleStatusBadge';
 
 export default async function RaffleTable() {
-  const raffles = await prisma.raffle.findMany({
+  const sorteos = await prisma.sorteo.findMany({
     orderBy: [
       {
-        status: 'asc',
-      },
-      {
-        createdAt: 'desc',
+        creadoEn: 'desc',
       },
     ],
   });
@@ -36,9 +33,6 @@ export default async function RaffleTable() {
               Fecha Sorteo
             </th>
             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Estado
-            </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Creado
             </th>
             <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -47,16 +41,16 @@ export default async function RaffleTable() {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {raffles.length > 0 ? (
-            raffles.map((raffle) => (
-              <tr key={raffle.id} className="hover:bg-gray-50">
+          {sorteos.length > 0 ? (
+            sorteos.map((sorteo) => (
+              <tr key={sorteo.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
                     <div className="flex-shrink-0 h-10 w-10 bg-gray-200 rounded-md relative">
-                      {raffle.imageUrl ? (
+                      {sorteo.imagenUrl ? (
                         <Image
-                          src={raffle.imageUrl}
-                          alt={raffle.title}
+                          src={sorteo.imagenUrl}
+                          alt={sorteo.titulo}
                           fill
                           className="object-cover rounded-md"
                         />
@@ -68,56 +62,53 @@ export default async function RaffleTable() {
                     </div>
                     <div className="ml-4">
                       <div className="text-sm font-medium text-gray-900">
-                        {raffle.title}
+                        {sorteo.titulo}
                       </div>
                       <div className="text-sm text-gray-500 truncate max-w-xs">
-                        {raffle.prize}
+                        {sorteo.descripcion}
                       </div>
                     </div>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">
-                    {formatCurrency(Number(raffle.ticketPrice))}
+                    {formatCurrency(Number(sorteo.precio))}
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">
-                    {raffle.soldTickets} / {raffle.totalTickets}
+                    {sorteo.stockVendido} / {sorteo.stockTotal}
                   </div>
                   <div className="w-24 h-1.5 bg-gray-200 rounded-full mt-1">
                     <div
                       className="h-1.5 bg-blue-600 rounded-full"
                       style={{
-                        width: `${(raffle.soldTickets / raffle.totalTickets) * 100}%`,
+                        width: `${(sorteo.stockVendido / sorteo.stockTotal) * 100}%`,
                       }}
                     ></div>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">
-                    {new Date(raffle.drawDate).toLocaleDateString()}
+                    {new Date(sorteo.fechaSorteo).toLocaleDateString()}
                   </div>
                   <div className="text-xs text-gray-500">
-                    {new Date(raffle.drawDate).toLocaleTimeString()}
+                    {new Date(sorteo.fechaSorteo).toLocaleTimeString()}
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <RaffleStatusBadge status={raffle.status} />
-                </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {new Date(raffle.createdAt).toLocaleDateString()}
+                  {new Date(sorteo.creadoEn).toLocaleDateString()}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <div className="flex items-center justify-end space-x-2">
                     <Link
-                      href={`/admin/sorteos/${raffle.id}`}
+                      href={`/admin/sorteos/${sorteo.id}`}
                       className="text-gray-600 hover:text-gray-900"
                     >
                       <Eye className="w-5 h-5" />
                     </Link>
                     <Link
-                      href={`/admin/sorteos/${raffle.id}/editar`}
+                      href={`/admin/sorteos/${sorteo.id}/editar`}
                       className="text-blue-600 hover:text-blue-900"
                     >
                       <Edit className="w-5 h-5" />

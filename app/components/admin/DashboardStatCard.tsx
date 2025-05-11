@@ -1,12 +1,30 @@
 // app/components/admin/DashboardStatCard.tsx
 'use client';
 
-import { LucideIcon } from 'lucide-react';
+import { 
+  ShoppingCart, 
+  Users, 
+  Calendar, 
+  TrendingUp, 
+  CreditCard,
+  LucideIcon
+} from 'lucide-react';
+
+// Mapeo de nombres de iconos a componentes
+const iconMap = {
+  ShoppingCart,
+  Users,
+  Calendar,
+  TrendingUp,
+  CreditCard
+};
+
+type IconName = keyof typeof iconMap;
 
 type DashboardStatCardProps = {
   title: string;
   value: number | string;
-  icon: LucideIcon;
+  iconName: IconName; // Cambiamos de icon a iconName
   trend?: {
     value: number;
     label: string;
@@ -19,11 +37,14 @@ type DashboardStatCardProps = {
 export default function DashboardStatCard({
   title,
   value,
-  icon: Icon,
+  iconName, // Cambiamos de icon a iconName
   trend,
   className = '',
   iconClassName = ''
 }: DashboardStatCardProps) {
+  // Obtener el componente del icono del mapa
+  const Icon = iconMap[iconName];
+
   return (
     <div className={`p-6 rounded-lg shadow ${className}`}>
       <div className="flex items-start justify-between">
