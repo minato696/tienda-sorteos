@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  creadoEn  DateTime @default(now())
+}
+
+model Sorteo {
+  id            Int       @id @default(autoincrement())
+  titulo        String
+  descripcion   String
+  imagenUrl     String
+  precio        Float
+  fechaSorteo   DateTime
+  stockTotal    Int
+  stockVendido  Int       @default(0)
+  creadoEn      DateTime  @default(now())
+  tickets       Ticket[]
+
+  ganadorId     Int?      @unique // ✅ SOLUCIÓN AQUÍ
+  ganador       Ticket?   @relation("GanadorSorteo", fields: [ganadorId], references: [id])
+}
+
+model Participante {
+  id           Int      @id @default(autoincrement())
+  dni          String
+  nombres      String
+  apellidos    String
+  telefono     String
+  email        String
+  departamento String
+  tickets      Ticket[]
+  creadoEn     DateTime @default(now())
+}
+
+model Ticket {
+  id             Int            @id @default(autoincrement())
+  codigo         String         @unique
+  sorteo         Sorteo         @relation(fields: [sorteoId], references: [id])
+  sorteoId       Int
+  participante   Participante   @relation(fields: [participanteId], references: [id])
+  participanteId Int
+  compradoEn     DateTime       @default(now())
+
+  // Relación inversa al sorteo ganador
+  sorteoGanador  Sorteo?        @relation("GanadorSorteo")
+}
