@@ -1,6 +1,7 @@
-"use client"
-import SorteoCard from '../components/sorteos/SorteoCard';
+import HeroSection from '@/components/layout/HeroSection';
+import SorteoCard from '@/components/sorteos/SorteoCard';
 
+// Definir la interfaz para los datos de sorteo
 interface Sorteo {
   id: string;
   title: string;
@@ -40,26 +41,46 @@ export default function Home() {
   ];
 
   return (
-    <div className="container mx-auto p-4">
-      {/* Hero Section */}
-      <div className="bg-blue-700 text-white p-8 rounded-lg mb-8">
-        <h1 className="text-3xl font-bold mb-4">Gana autos de lujo</h1>
-        <p className="mb-6">Participa en nuestros sorteos y gana increíbles premios</p>
-        <button className="bg-red-500 hover:bg-red-600 px-6 py-2 rounded-md font-bold">
-          Comprar Tickets
-        </button>
-      </div>
+    <>
+      <HeroSection />
       
-      {/* Sorteos Destacados */}
-      <section className="py-8">
-        <h2 className="text-2xl font-bold mb-6">Sorteos Destacados</h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featuredSorteos.map((sorteo) => (
-            <SorteoCard key={sorteo.id} {...sorteo} />
-          ))}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold mb-8 text-center">Sorteos Destacados</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {featuredSorteos.map((sorteo) => (
+              <SorteoCard key={sorteo.id} {...sorteo} />
+            ))}
+          </div>
         </div>
       </section>
-    </div>
+      
+      <section className="py-16 bg-gray-100">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold mb-12 text-center">¿Cómo Funciona?</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white p-6 rounded-lg shadow-md text-center">
+              <div className="w-16 h-16 bg-blue-100 text-blue-800 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">1</div>
+              <h3 className="text-xl font-bold mb-2">Compra tus tickets</h3>
+              <p className="text-gray-600">Selecciona el sorteo que te interese y compra tantos tickets como desees.</p>
+            </div>
+            
+            <div className="bg-white p-6 rounded-lg shadow-md text-center">
+              <div className="w-16 h-16 bg-blue-100 text-blue-800 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">2</div>
+              <h3 className="text-xl font-bold mb-2">Espera el sorteo</h3>
+              <p className="text-gray-600">Cada sorteo tiene una fecha definida. Sigue el sorteo en vivo a través de nuestras redes.</p>
+            </div>
+            
+            <div className="bg-white p-6 rounded-lg shadow-md text-center">
+              <div className="w-16 h-16 bg-blue-100 text-blue-800 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">3</div>
+              <h3 className="text-xl font-bold mb-2">¡Recibe tu premio!</h3>
+              <p className="text-gray-600">Si eres el ganador, te contactaremos de inmediato para coordinar la entrega.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

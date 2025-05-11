@@ -1,9 +1,11 @@
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
 import './globals.css';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Sorteos Premium',
-  description: 'Plataforma de sorteos premium',
+  description: 'Plataforma de sorteos para ganar autos de lujo y otros premios',
 };
 
 export default function RootLayout({
@@ -13,18 +15,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body>
-        <header className="bg-blue-900 text-white p-4">
-          <div className="container mx-auto">
-            <h1 className="text-2xl font-bold">Sorteos Premium</h1>
-          </div>
-        </header>
-        <main>{children}</main>
-        <footer className="bg-blue-900 text-white p-4 mt-8">
-          <div className="container mx-auto">
-            <p>© 2025 Sorteos Premium</p>
-          </div>
-        </footer>
+      <body className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-grow">{children}</main>
+        <Footer />
       </body>
     </html>
   );
