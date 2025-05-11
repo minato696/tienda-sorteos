@@ -1,3 +1,4 @@
+// schema.prisma
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,50 +8,272 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Admin {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  creadoEn  DateTime @default(now())
+// AUTENTICACIÓN Y USUARIOS
+model User {
+  id              String           @id @default(cuid())
+  name            String?
+  email           String?          @unique
+  password        String?
+  emailVerified   DateTime?
+  image           String?
+  role            Role             @default(USER)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  tickets         Ticket[]
+  transacciones   Transaccion[]
+  actividad       Auditoria[]
+  notificaciones  Notificacion[]
 }
 
+enum Role {
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
+
+// SORTEOS
 model Sorteo {
-  id            Int       @id @default(autoincrement())
-  titulo        String
-  descripcion   String
-  imagenUrl     String
-  precio        Float
-  fechaSorteo   DateTime
-  stockTotal    Int
-  stockVendido  Int       @default(0)
-  creadoEn      DateTime  @default(now())
-  tickets       Ticket[]
-
-  ganadorId     Int?      @unique // ✅ SOLUCIÓN AQUÍ
-  ganador       Ticket?   @relation("GanadorSorteo", fields: [ganadorId], references: [id])
+  id                Int               @id @default(autoincrement())
+  titulo            String
+  slug              String?           @unique
+  descripcion       String            @db.Text
+  imagenUrl         String?
+  premio            String
+  valorPremio       Float?
+  precio            Float
+  fechaInicio       DateTime
+  fechaFin          DateTime
+  fechaSorteo       DateTime
+  estado            EstadoSorteo      @default(PROXIMO)
+  stockTotal        Int
+  stockVendido      Int               @default(0)
+  destacado         Boolean           @default(false)
+  creadoEn          DateTime          @default(now())
+  actualizadoEn     DateTime?         @updatedAt
+  tickets           Ticket[]
+  ganadorId         Int?              @unique
+  ganador           Ticket?           @relation("GanadorSorteo", fields: [ganadorId], references: [id])
+  transacciones     Transaccion[]
 }
 
+enum EstadoSorteo {
+  PROXIMO
+  ACTIVO
+  FINALIZADO
+  CANCELADO
+}
+
+// PARTICIPANTES Y TICKETS
 model Participante {
-  id           Int      @id @default(autoincrement())
-  dni          String
-  nombres      String
-  apellidos    String
-  telefono     String
-  email        String
-  departamento String
-  tickets      Ticket[]
-  creadoEn     DateTime @default(now())
+  id              Int             @id @default(autoincrement())
+  dni             String          @unique
+  nombres         String
+  apellidos       String
+  telefono        String
+  email           String
+  departamento    String
+  direccion       String?
+  creadoEn        DateTime        @default(now())
+  actualizadoEn   DateTime?       @updatedAt
+  tickets         Ticket[]
+  transacciones   Transaccion[]
+  notificaciones  Notificacion[]
 }
 
 model Ticket {
-  id             Int            @id @default(autoincrement())
-  codigo         String         @unique
-  sorteo         Sorteo         @relation(fields: [sorteoId], references: [id])
-  sorteoId       Int
-  participante   Participante   @relation(fields: [participanteId], references: [id])
-  participanteId Int
-  compradoEn     DateTime       @default(now())
-
+  id                Int              @id @default(autoincrement())
+  codigo            String           @unique
+  sorteo            Sorteo           @relation(fields: [sorteoId], references: [id])
+  sorteoId          Int
+  participante      Participante?    @relation(fields: [participanteId], references: [id])
+  participanteId    Int?
+  usuario           User?            @relation(fields: [userId], references: [id])
+  userId            String?
+  transaccion       Transaccion?     @relation(fields: [transaccionId], references: [id])
+  transaccionId     Int?
+  estado            EstadoTicket     @default(DISPONIBLE)
+  compradoEn        DateTime?
+  codigoQR          String?
+  creadoEn          DateTime         @default(now())
+  actualizadoEn     DateTime?        @updatedAt
+  
   // Relación inversa al sorteo ganador
-  sorteoGanador  Sorteo?        @relation("GanadorSorteo")
+  sorteoGanador     Sorteo?          @relation("GanadorSorteo")
+}
+
+enum EstadoTicket {
+  DISPONIBLE
+  RESERVADO
+  VENDIDO
+  CANCELADO
+  GANADOR
+}
+
+// TRANSACCIONES Y PAGOS
+model Transaccion {
+  id                Int               @id @default(autoincrement())
+  monto             Float
+  referenciaPago    String?           @unique
+  metodoPago        MetodoPago
+  estado            EstadoPago        @default(PENDIENTE)
+  
+  participanteId    Int?
+  participante      Participante?     @relation(fields: [participanteId], references: [id])
+  
+  userId            String?
+  usuario           User?             @relation(fields: [userId], references: [id])
+  
+  sorteoId          Int
+  sorteo            Sorteo            @relation(fields: [sorteoId], references: [id])
+  
+  tickets           Ticket[]
+  
+  comprobante       String?
+  emailEnviado      Boolean           @default(false)
+  notaAdmin         String?           @db.Text
+  ipComprador       String?
+  
+  culqiData         Json?             // Para almacenar datos adicionales de Culqi
+  
+  creadoEn          DateTime          @default(now())
+  actualizadoEn     DateTime?         @updatedAt
+}
+
+enum MetodoPago {
+  TARJETA_CREDITO
+  TARJETA_DEBITO
+  YAPE
+  TRANSFERENCIA
+  OTRO
+}
+
+enum EstadoPago {
+  PENDIENTE
+  COMPLETADO
+  FALLIDO
+  REEMBOLSADO
+}
+
+// CONTENIDO DEL SITIO
+model Contenido {
+  id                Int               @id @default(autoincrement())
+  tipo              TipoContenido
+  posicion          Int               @default(0)  // Para ordenar contenidos del mismo tipo
+  titulo            String
+  subtitulo         String?
+  contenido         String            @db.Text
+  imagen            String?
+  slug              String?           @unique
+  activo            Boolean           @default(true)
+  creadoEn          DateTime          @default(now())
+  actualizadoEn     DateTime?         @updatedAt
+}
+
+enum TipoContenido {
+  BANNER
+  COMO_FUNCIONA
+  PREGUNTA_FRECUENTE
+  TERMINOS
+  CONTACTO
+  SOBRE_NOSOTROS
+}
+
+// CONFIGURACIONES
+model Configuracion {
+  id                String            @id
+  valor             String            @db.Text
+  descripcion       String?
+  actualizadoEn     DateTime?         @updatedAt
+}
+
+// CORREOS Y NOTIFICACIONES
+model PlantillaCorreo {
+  id                Int               @id @default(autoincrement())
+  tipo              TipoPlantilla
+  nombre            String
+  asunto            String
+  contenido         String            @db.Text
+  activo            Boolean           @default(true)
+  creadoEn          DateTime          @default(now())
+  actualizadoEn     DateTime?         @updatedAt
+}
+
+enum TipoPlantilla {
+  CONFIRMACION_COMPRA
+  ANUNCIO_GANADOR
+  RECORDATORIO
+  RECUPERAR_PASSWORD
+}
+
+model Notificacion {
+  id                Int               @id @default(autoincrement())
+  titulo            String
+  mensaje           String            @db.Text
+  tipo              TipoNotificacion
+  leido             Boolean           @default(false)
+  
+  participanteId    Int?
+  participante      Participante?     @relation(fields: [participanteId], references: [id])
+  
+  userId            String?
+  usuario           User?             @relation(fields: [userId], references: [id])
+  
+  creadoEn          DateTime          @default(now())
+}
+
+enum TipoNotificacion {
+  SISTEMA
+  COMPRA
+  GANADOR
+  RECORDATORIO
+  ERROR
+}
+
+// AUDITORÍA
+model Auditoria {
+  id                Int               @id @default(autoincrement())
+  accion            String
+  entidad           String
+  entidadId         String
+  
+  userId            String?
+  usuario           User?             @relation(fields: [userId], references: [id])
+  
+  datos             Json?
+  ip                String?
+  userAgent         String?
+  creadoEn          DateTime          @default(now())
+}
+
+// PARA SOPORTE DE NEXTAUTH
+model Account {
+  id                String            @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?           @db.Text
+  access_token      String?           @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?           @db.Text
+  session_state     String?
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id                String            @id @default(cuid())
+  sessionToken      String            @unique
+  userId            String
+  expires           DateTime
+}
+
+model VerificationToken {
+  identifier        String
+  token             String            @unique
+  expires           DateTime
+
+  @@unique([identifier, token])
 }
