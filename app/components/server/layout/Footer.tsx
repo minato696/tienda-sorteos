@@ -1,7 +1,7 @@
-import React from 'react';
+// app/components/server/layout/Footer.tsx
 import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin } from 'lucide-react';
 
-const Footer: React.FC = () => {
+export default function Footer() {
   return (
     <footer className="bg-blue-950 text-white">
       {/* Main footer content */}
@@ -83,7 +83,7 @@ const Footer: React.FC = () => {
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm mb-4 md:mb-0">
-              © 2025 SorteosPremium. Todos los derechos reservados.
+              © {new Date().getFullYear()} SorteosPremium. Todos los derechos reservados.
             </p>
             <div className="flex space-x-4">
               <img src="/api/placeholder/50/30" alt="Visa" className="h-8" />
@@ -96,6 +96,4 @@ const Footer: React.FC = () => {
       </div>
     </footer>
   );
-};
-
-export default Footer;
+}

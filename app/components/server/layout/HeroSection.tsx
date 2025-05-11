@@ -1,7 +1,15 @@
-import React from 'react';
+// app/components/server/layout/HeroSection.tsx
 import { ArrowRight, Award, Shield, Clock } from 'lucide-react';
 
-const HeroSection: React.FC = () => {
+interface HeroSectionProps {
+  title?: string;
+  subtitle?: string;
+}
+
+export default function HeroSection({ 
+  title = "Gana uno de nuestros 3 Autos de Lujo con solo un ticket",
+  subtitle = "Por solo $25.00 puedes participar en nuestro sorteo mensual y llevarte un increíble auto 0KM. ¡Tus sueños están a un ticket de distancia!"
+}: HeroSectionProps) {
   return (
     <div className="pt-24 pb-16 bg-gradient-to-b from-blue-950 via-blue-900 to-blue-800 text-white">
       {/* Main hero content */}
@@ -15,8 +23,7 @@ const HeroSection: React.FC = () => {
           </h1>
           
           <p className="text-lg md:text-xl text-gray-300">
-            Por solo $25.00 puedes participar en nuestro sorteo mensual y 
-            llevarte un increíble auto 0KM. ¡Tus sueños están a un ticket de distancia!
+            {subtitle}
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
@@ -86,6 +93,4 @@ const HeroSection: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default HeroSection;
+}

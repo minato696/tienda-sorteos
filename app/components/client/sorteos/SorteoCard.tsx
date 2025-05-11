@@ -1,5 +1,5 @@
-"use client"
-import React from 'react';
+// app/components/client/sorteos/SorteoCard.tsx
+"use client";
 
 interface SorteoCardProps {
   id: string;
@@ -10,14 +10,14 @@ interface SorteoCardProps {
   soldTickets: number;
 }
 
-const SorteoCard: React.FC<SorteoCardProps> = ({ 
+export default function SorteoCard({ 
   title, 
   price, 
   endDate, 
   totalTickets, 
   soldTickets,
   id 
-}) => {
+}: SorteoCardProps) {
   // Calcular el porcentaje de tickets vendidos
   const percentageSold = (soldTickets / totalTickets) * 100;
   
@@ -66,6 +66,4 @@ const SorteoCard: React.FC<SorteoCardProps> = ({
       </div>
     </div>
   );
-};
-
-export default SorteoCard;
+}

@@ -1,42 +1,34 @@
-import HeroSection from '@/app/components/client/layout/HeroSection';
+// app/page.tsx
+import HeroSection from '@/app/components/server/layout/HeroSection';
 import SorteoCard from '@/app/components/client/sorteos/SorteoCard';
+import Link from 'next/link';
 
-// Definir la interfaz para los datos de sorteo
-interface Sorteo {
-  id: string;
-  title: string;
-  price: number;
-  endDate: string;
-  totalTickets: number;
-  soldTickets: number;
-}
-
-export default function Home() {
-  // Datos de ejemplo para los sorteos destacados
-  const featuredSorteos: Sorteo[] = [
+export default function HomePage() {
+  // Datos de ejemplo (normalmente vendrían de la base de datos)
+  const sorteos = [
     {
-      id: "1",
-      title: "Mercedes-Benz GLC 300",
+      id: '1',
+      title: 'Auto BMW Serie 3 2025',
       price: 25,
-      endDate: "15 Jun 2025",
-      totalTickets: 15000,
-      soldTickets: 7850,
+      endDate: '15 junio, 2025',
+      totalTickets: 5000,
+      soldTickets: 2500
     },
     {
-      id: "2",
-      title: "BMW X5 2025 Executive",
-      price: 25,
-      endDate: "30 Jul 2025",
-      totalTickets: 15000,
-      soldTickets: 3420,
+      id: '2',
+      title: 'Apartamento en Miraflores',
+      price: 50,
+      endDate: '30 julio, 2025',
+      totalTickets: 10000,
+      soldTickets: 4000
     },
     {
-      id: "3",
-      title: "Audi Q7 Premium Plus",
-      price: 25,
-      endDate: "15 Ago 2025",
-      totalTickets: 15000,
-      soldTickets: 1250,
+      id: '3',
+      title: 'iPhone 16 Pro Max',
+      price: 10,
+      endDate: '10 junio, 2025',
+      totalTickets: 3000,
+      soldTickets: 2200
     }
   ];
 
@@ -46,38 +38,30 @@ export default function Home() {
       
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-8 text-center">Sorteos Destacados</h2>
+          <h2 className="text-3xl font-bold text-center mb-2">Sorteos Activos</h2>
+          <p className="text-gray-600 text-center mb-8">Encuentra tu próximo premio y compra tus tickets ahora</p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {featuredSorteos.map((sorteo) => (
-              <SorteoCard key={sorteo.id} {...sorteo} />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {sorteos.map((sorteo) => (
+              <SorteoCard 
+                key={sorteo.id}
+                id={sorteo.id}
+                title={sorteo.title}
+                price={sorteo.price}
+                endDate={sorteo.endDate}
+                totalTickets={sorteo.totalTickets}
+                soldTickets={sorteo.soldTickets}
+              />
             ))}
           </div>
-        </div>
-      </section>
-      
-      <section className="py-16 bg-gray-100">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-12 text-center">¿Cómo Funciona?</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-lg shadow-md text-center">
-              <div className="w-16 h-16 bg-blue-100 text-blue-800 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">1</div>
-              <h3 className="text-xl font-bold mb-2">Compra tus tickets</h3>
-              <p className="text-gray-600">Selecciona el sorteo que te interese y compra tantos tickets como desees.</p>
-            </div>
-            
-            <div className="bg-white p-6 rounded-lg shadow-md text-center">
-              <div className="w-16 h-16 bg-blue-100 text-blue-800 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">2</div>
-              <h3 className="text-xl font-bold mb-2">Espera el sorteo</h3>
-              <p className="text-gray-600">Cada sorteo tiene una fecha definida. Sigue el sorteo en vivo a través de nuestras redes.</p>
-            </div>
-            
-            <div className="bg-white p-6 rounded-lg shadow-md text-center">
-              <div className="w-16 h-16 bg-blue-100 text-blue-800 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">3</div>
-              <h3 className="text-xl font-bold mb-2">¡Recibe tu premio!</h3>
-              <p className="text-gray-600">Si eres el ganador, te contactaremos de inmediato para coordinar la entrega.</p>
-            </div>
+          <div className="text-center mt-10">
+            <Link 
+              href="/sorteos"
+              className="bg-blue-900 hover:bg-blue-800 text-white px-6 py-3 rounded-md font-semibold inline-block"
+            >
+              Ver Todos los Sorteos
+            </Link>
           </div>
         </div>
       </section>

@@ -1,11 +1,13 @@
-"use client"
-import React, { useState } from 'react';
-import { ShoppingCart, User, Menu, X } from 'lucide-react';
+// app/components/client/layout/Navbar.tsx
+"use client";
 
-const Navbar: React.FC = () => {
-  
+import { useState } from 'react';
+import Link from 'next/link';
+import { User, ShoppingCart, Menu, X } from 'lucide-react';
+
+export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  
   return (
     <nav className="bg-gradient-to-r from-blue-900 to-blue-950 text-white py-4 shadow-md fixed w-full z-50">
       <div className="container mx-auto px-4 flex justify-between items-center">
@@ -71,6 +73,4 @@ const Navbar: React.FC = () => {
       )}
     </nav>
   );
-};
-
-export default Navbar;
+}
