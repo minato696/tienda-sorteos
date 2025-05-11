@@ -1,5 +1,5 @@
-import HeroSection from '@/app/components/layout/HeroSection';
-import SorteoCard from '@/app/components/sorteos/SorteoCard';
+import HeroSection from '@/app/components/client/layout/HeroSection';
+import SorteoCard from '@/app/components/client/sorteos/SorteoCard';
 
 // Definir la interfaz para los datos de sorteo
 interface Sorteo {
