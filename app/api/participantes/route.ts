@@ -1,6 +1,6 @@
 // app/api/participantes/route.ts
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/app/lib/prisma';
 
 function generarCodigoUnico() {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
