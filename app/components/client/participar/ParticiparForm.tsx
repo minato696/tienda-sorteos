@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 // Tipo para los datos del formulario
@@ -13,7 +12,7 @@ interface FormData {
   telefono: string;
   email: string;
   departamento: string;
-  cantidadTickets: number;
+  cantidad: number;
 }
 
 // Estado inicial del formulario
@@ -24,7 +23,7 @@ const initialFormState: FormData = {
   telefono: "",
   email: "",
   departamento: "Lima",
-  cantidadTickets: 1
+  cantidad: 1
 };
 
 // Opciones para el campo de departamento
@@ -36,7 +35,7 @@ const departamentos = [
   "Puno", "San Martín", "Tacna", "Tumbes", "Ucayali"
 ];
 
-export default function ParticiparPage() {
+export default function ParticiparForm() {
   const [formData, setFormData] = useState<FormData>(initialFormState);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -57,15 +56,15 @@ export default function ParticiparPage() {
   const incrementarTickets = () => {
     setFormData(prev => ({
       ...prev,
-      cantidadTickets: prev.cantidadTickets + 1
+      cantidad: prev.cantidad + 1
     }));
   };
 
   const decrementarTickets = () => {
-    if (formData.cantidadTickets > 1) {
+    if (formData.cantidad > 1) {
       setFormData(prev => ({
         ...prev,
-        cantidadTickets: prev.cantidadTickets - 1
+        cantidad: prev.cantidad - 1
       }));
     }
   };
@@ -121,24 +120,33 @@ export default function ParticiparPage() {
     }
 
     try {
-      console.log("Enviando datos al backend:", formData);
+      // Preparar los datos
+      const dataToSend = {
+        ...formData,
+        cantidad: Number(formData.cantidad)
+      };
+      
+      console.log("Enviando datos al backend:", dataToSend);
       
       const response = await fetch("/api/participar", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(dataToSend),
       });
 
-      const data = await response.json();
+      const responseData = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.mensaje || "Error al registrar participante");
+        throw new Error(responseData.mensaje || "Error al registrar participante");
       }
 
       // Guardar datos en localStorage para usar en la página de confirmación
-      localStorage.setItem('participanteData', JSON.stringify(formData));
+      localStorage.setItem('participanteData', JSON.stringify({
+        ...formData,
+        tickets: responseData.tickets // Guardar también los tickets generados
+      }));
       
       setSuccess("¡Registro exitoso! Te hemos enviado un email con los detalles.");
       
@@ -159,7 +167,7 @@ export default function ParticiparPage() {
   };
 
   return (
-    <main className="bg-gray-50 pt-24 pb-16"> {/* Añadido padding-top para evitar que la cabecera lo tape */}
+    <main className="bg-gray-50 pt-24 pb-16">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row gap-6 max-w-6xl mx-auto">
           {/* Columna izquierda - Información del sorteo */}
@@ -190,7 +198,7 @@ export default function ParticiparPage() {
                 </div>
                 <div className="flex justify-between items-center pt-2 border-t border-gray-200">
                   <span className="text-gray-700 font-medium">Total a pagar:</span>
-                  <span className="font-bold text-xl text-[#192252]">S/ {(precioTicket * formData.cantidadTickets).toFixed(2)}</span>
+                  <span className="font-bold text-xl text-[#192252]">S/ {(precioTicket * formData.cantidad).toFixed(2)}</span>
                 </div>
               </div>
             </div>
@@ -333,7 +341,7 @@ export default function ParticiparPage() {
 
               {/* Cantidad de tickets */}
               <div>
-                <label htmlFor="cantidadTickets" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="cantidad" className="block text-sm font-medium text-gray-700 mb-2">
                   ¿Cuántos tickets quieres comprar?
                 </label>
                 <div className="flex items-center">
@@ -347,7 +355,7 @@ export default function ParticiparPage() {
                   <input
                     type="text"
                     readOnly
-                    value={formData.cantidadTickets}
+                    value={formData.cantidad}
                     className="w-16 text-center py-2 border-t border-b border-gray-300 bg-white"
                   />
                   <button 
@@ -358,7 +366,7 @@ export default function ParticiparPage() {
                     +
                   </button>
                   <span className="ml-4 text-gray-700 font-medium">
-                    {formData.cantidadTickets} ticket{formData.cantidadTickets > 1 ? 's' : ''}
+                    {formData.cantidad} ticket{formData.cantidad > 1 ? 's' : ''}
                   </span>
                 </div>
               </div>
@@ -396,7 +404,7 @@ export default function ParticiparPage() {
                     Procesando...
                   </div>
                 ) : (
-                  `Comprar Ahora - S/ ${(precioTicket * formData.cantidadTickets).toFixed(2)}`
+                  `Comprar Ahora - S/ ${(precioTicket * formData.cantidad).toFixed(2)}`
                 )}
               </button>
               

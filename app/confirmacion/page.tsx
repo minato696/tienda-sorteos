@@ -4,23 +4,12 @@ import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import html2canvas from 'html2canvas';
 
-// Función para generar código único de 6 caracteres
-const generarCodigoUnico = () => {
-  const caracteres = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let codigo = '';
-  for (let i = 0; i < 6; i++) {
-    codigo += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
-  }
-  return codigo;
-};
-
-// Componente separado solo para mostrar en pantalla (diseño web)
-const TicketDisplay = ({ codigo, nombre, apellidos, dni, sorteo }: {
+// Componente para mostrar un ticket
+const TicketDisplay = ({ codigo, nombre, apellidos, dni }: {
   codigo: string;
   nombre: string;
   apellidos: string;
   dni: string;
-  sorteo: string;
 }) => {
   return (
     <div className="border border-gray-300 rounded-lg shadow-md overflow-hidden bg-white relative">
@@ -67,7 +56,7 @@ const TicketDisplay = ({ codigo, nombre, apellidos, dni, sorteo }: {
             <div className="w-1/2">
               <div className="bg-gray-100 p-3 rounded-lg">
                 <h3 className="text-sm font-semibold text-gray-700 uppercase">DETALLES</h3>
-                <p className="text-gray-800">{sorteo}</p>
+                <p className="text-gray-800">Sorteo Auto BMW</p>
                 <p className="text-gray-600 text-sm">Fecha: 14/06/2025</p>
               </div>
             </div>
@@ -78,15 +67,12 @@ const TicketDisplay = ({ codigo, nombre, apellidos, dni, sorteo }: {
   );
 };
 
-// Componente oculto optimizado para descarga
-
-
-const TicketForDownload = ({ codigo, nombre, apellidos, dni, sorteo, ticketRef }: {
+// Componente para descargar
+const TicketForDownload = ({ codigo, nombre, apellidos, dni, ticketRef }: {
   codigo: string;
   nombre: string;
   apellidos: string;
   dni: string;
-  sorteo: string;
   ticketRef: React.RefObject<HTMLDivElement>;
 }) => {
   return (
@@ -105,20 +91,19 @@ const TicketForDownload = ({ codigo, nombre, apellidos, dni, sorteo, ticketRef }
         fontFamily: 'Arial, sans-serif'
       }}
     >
-      {/* CABECERA CON TEXTO MÁS ELEVADO */}
+      {/* CABECERA */}
       <div style={{
         width: '100%',
         backgroundColor: '#1a202c',
-        padding: '0', // Sin padding para control total
+        padding: '0',
         margin: '0',
         height: '50px',
         position: 'relative'
       }}>
-        {/* Texto SORTEOS PREMIUM elevado */}
         <div style={{
           position: 'absolute',
           left: '24px',
-          top: '10px', // Posicionado más arriba (antes estaba en top: 50%)
+          top: '10px',
           color: 'white',
           fontWeight: 'bold',
           fontSize: '24px',
@@ -127,11 +112,10 @@ const TicketForDownload = ({ codigo, nombre, apellidos, dni, sorteo, ticketRef }
           SORTEOS PREMIUM
         </div>
         
-        {/* Código elevado */}
         <div style={{
           position: 'absolute',
           right: '24px',
-          top: '10px', // También posicionado más arriba
+          top: '10px',
           color: 'white',
           fontFamily: 'monospace',
           fontWeight: 'bold',
@@ -241,7 +225,7 @@ const TicketForDownload = ({ codigo, nombre, apellidos, dni, sorteo, ticketRef }
                   fontSize: '16px',
                   margin: '0 0 4px 0'
                 }}>
-                  {sorteo}
+                  Sorteo Auto BMW
                 </p>
                 <p style={{
                   fontSize: '14px',
@@ -293,7 +277,6 @@ const TicketForDownload = ({ codigo, nombre, apellidos, dni, sorteo, ticketRef }
   );
 };
 
-
 export default function ConfirmacionPage() {
   const [tickets, setTickets] = useState<any[]>([]);
   const [downloading, setDownloading] = useState(false);
@@ -305,25 +288,46 @@ export default function ConfirmacionPage() {
     
     if (participanteData) {
       const participante = JSON.parse(participanteData);
-      const cantidad = participante.cantidadTickets || 1;
-      const sorteoNombre = "Auto BMW Serie 3 2025";
       
-      // Generar los tickets con códigos únicos
-      const nuevosTickets = Array(cantidad).fill(0).map(() => ({
-        codigo: generarCodigoUnico(),
-        nombre: participante.nombres,
-        apellidos: participante.apellidos,
-        dni: participante.dni,
-        sorteo: sorteoNombre,
-      }));
-      
-      setTickets(nuevosTickets);
-      // Inicializar los refs para los tickets
-      ticketRefs.current = nuevosTickets.map(() => null);
+      if (participante.tickets) {
+        // Si hay tickets en localStorage, usarlos directamente
+        const nuevosTickets = participante.tickets.map((ticket: any) => ({
+          codigo: ticket.codigo,
+          nombre: participante.nombres,
+          apellidos: participante.apellidos,
+          dni: participante.dni
+        }));
+        
+        setTickets(nuevosTickets);
+        ticketRefs.current = nuevosTickets.map(() => null);
+      } else {
+        // Generar tickets basados en la cantidad si no hay tickets guardados
+        const cantidad = participante.cantidad || 1;
+        
+        // Función para generar código único
+        const generarCodigoUnico = () => {
+          const caracteres = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+          let codigo = '';
+          for (let i = 0; i < 6; i++) {
+            codigo += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+          }
+          return codigo;
+        };
+        
+        const nuevosTickets = Array(cantidad).fill(0).map(() => ({
+          codigo: generarCodigoUnico(),
+          nombre: participante.nombres,
+          apellidos: participante.apellidos,
+          dni: participante.dni
+        }));
+        
+        setTickets(nuevosTickets);
+        ticketRefs.current = nuevosTickets.map(() => null);
+      }
     }
   }, []);
 
-  // Función para descargar ticket con método mejorado
+  // Función para descargar ticket
   const descargarTicket = async (index: number) => {
     if (!ticketRefs.current[index]) return;
     
@@ -366,7 +370,7 @@ export default function ConfirmacionPage() {
           ticketElement.style.display = 'none';
           setDownloading(false);
         }
-      }, 100); // Pequeña pausa para asegurar que el elemento está renderizado
+      }, 100);
     } catch (error) {
       console.error("Error al generar la imagen del ticket:", error);
       setDownloading(false);
@@ -405,7 +409,7 @@ export default function ConfirmacionPage() {
         
         <div className="mb-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="font-bold text-xl">Tus Tickets</h2>
+            <h2 className="font-bold text-xl">Tus Tickets ({tickets.length})</h2>
             <button 
               onClick={descargarTodosTickets} 
               disabled={downloading || tickets.length === 0}
@@ -440,7 +444,6 @@ export default function ConfirmacionPage() {
                     nombre={ticket.nombre}
                     apellidos={ticket.apellidos}
                     dni={ticket.dni}
-                    sorteo={ticket.sorteo}
                   />
                   
                   {/* Ticket oculto optimizado para descarga */}
@@ -449,14 +452,13 @@ export default function ConfirmacionPage() {
                     nombre={ticket.nombre}
                     apellidos={ticket.apellidos}
                     dni={ticket.dni}
-                    sorteo={ticket.sorteo}
                     ticketRef={el => ticketRefs.current[index] = el}
                   />
                   
                   {/* Botón de descarga */}
                   <button 
                     onClick={() => descargarTicket(index)} 
-                    className="download-button absolute top-2 right-2 bg-gray-800 bg-opacity-70 hover:bg-opacity-90 text-white rounded-full p-2 transition-all"
+                    className="absolute top-2 right-2 bg-gray-800 bg-opacity-70 hover:bg-opacity-90 text-white rounded-full p-2 transition-all"
                     title="Descargar ticket"
                   >
                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
