@@ -1,4 +1,3 @@
-// app/page.tsx
 import { prisma } from '@/app/lib/prisma';
 import SorteoCard from '@/app/components/client/sorteos/SorteoCard';
 import HeroSection from '@/app/components/server/layout/HeroSection';
@@ -41,6 +40,7 @@ export default async function HomePage() {
                   fechaSorteo={sorteo.fechaSorteo.toISOString()}
                   ticketsDisponibles={sorteo.ticketsDisponibles}
                   ticketsVendidos={sorteo.ticketsVendidos}
+                  imagenUrl={sorteo.imagenUrl}
                 />
               ))
             ) : (

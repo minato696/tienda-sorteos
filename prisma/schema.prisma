@@ -1,3 +1,4 @@
+// prisma/schema.prisma
 generator client {
   provider = "prisma-client-js"
 }
@@ -19,6 +20,8 @@ model Participante {
   fechaRegistro DateTime @default(now())
   tickets      Ticket[]
   creadoEn     DateTime @default(now())
+  sorteoId     Int?     // Añadimos la referencia al sorteo
+  sorteo       Sorteo?  @relation(fields: [sorteoId], references: [id])
 }
 
 model Ticket {
@@ -27,4 +30,26 @@ model Ticket {
   participante   Participante @relation(fields: [participanteId], references: [id])
   participanteId Int
   createdAt      DateTime     @default(now())
+  sorteoId       Int?         // Añadimos la referencia al sorteo
+  sorteo         Sorteo?      @relation(fields: [sorteoId], references: [id])
+}
+
+// Modelo para Sorteos
+model Sorteo {
+  id                Int           @id @default(autoincrement())
+  titulo            String
+  descripcion       String
+  imagenUrl         String        @default("/images/default-sorteo.jpg")
+  precio            Float         // Precio en Soles Peruanos
+  fechaSorteo       DateTime
+  ticketsDisponibles Int
+  ticketsVendidos   Int           @default(0)
+  estado            String        @default("ACTIVO") // ACTIVO, FINALIZADO, CANCELADO
+  premio            String
+  valorPremio       Float?        // Valor del premio en Soles Peruanos
+  destacado         Boolean       @default(false)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  participantes     Participante[]
+  tickets           Ticket[]
 }

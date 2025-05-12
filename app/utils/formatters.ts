@@ -1,4 +1,3 @@
-// app/utils/formatters.ts
 /**
  * Formatea un número como moneda en soles peruanos (S/)
  */
@@ -20,23 +19,4 @@ export function formatDate(date: Date | string): string {
     month: '2-digit',
     year: 'numeric'
   });
-}
-
-/**
- * Formatea una hora en formato local
- */
-export function formatTime(date: Date | string): string {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return dateObj.toLocaleTimeString('es-PE', {
-    hour: '2-digit',
-    minute: '2-digit'
-  });
-}
-
-/**
- * Formatea una fecha y hora en formato local
- */
-export function formatDateTime(date: Date | string): string {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return `${formatDate(dateObj)} ${formatTime(dateObj)}`;
 }
