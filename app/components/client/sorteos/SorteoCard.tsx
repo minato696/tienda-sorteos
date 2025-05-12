@@ -1,7 +1,7 @@
+/* app/components/client/sorteos/SorteoCard.tsx */
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { formatCurrency } from "@/app/utils/formatters";
@@ -16,33 +16,25 @@ interface SorteoCardProps {
   imagenUrl?: string | null;
 }
 
-export default function SorteoCard({
-  id,
-  titulo,
-  precio,
-  fechaSorteo,
-  ticketsDisponibles,
-  ticketsVendidos,
-  imagenUrl,
-}: SorteoCardProps) {
-  const router = useRouter();
-  const total       = ticketsDisponibles + ticketsVendidos;
-  const porcentaje  = Math.round((ticketsVendidos / total) * 100);
-  const fecha       = new Date(fechaSorteo).toLocaleDateString("es-ES", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
+export default function SorteoCard(props: SorteoCardProps) {
+  const {
+    id, titulo, precio,
+    fechaSorteo, ticketsDisponibles, ticketsVendidos, imagenUrl,
+  } = props;
+
+  const total      = ticketsDisponibles + ticketsVendidos;
+  const porcentaje = Math.round((ticketsVendidos / total) * 100);
+  const fecha      = new Date(fechaSorteo).toLocaleDateString("es-ES", {
+    day: "numeric", month: "long", year: "numeric",
   });
 
-  /* Fallback en caso de 404 o URL vacía */
   const [imgSrc, setImgSrc] = useState(
-    imagenUrl && imagenUrl.trim() !== ""
-      ? imagenUrl
-      : "/images/default-sorteo.jpg"
+    imagenUrl?.trim() ? imagenUrl : "/images/default-sorteo.jpg"
   );
 
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+      {/* ── Imagen ─────────────────────────────── */}
       <div className="h-48 bg-gray-200 relative">
         <Image
           src={imgSrc}
@@ -58,15 +50,14 @@ export default function SorteoCard({
         </div>
       </div>
 
+      {/* ── Contenido ─────────────────────────── */}
       <div className="p-6">
         <h3 className="text-xl font-bold mb-2">{titulo}</h3>
 
-        {/* Barra de progreso */}
+        {/* progreso */}
         <div className="mb-4">
           <div className="flex justify-between text-sm text-gray-600 mb-1">
-            <span>
-              Tickets: {ticketsVendidos}/{total}
-            </span>
+            <span>Tickets: {ticketsVendidos}/{total}</span>
             <span>{porcentaje}%</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
@@ -77,6 +68,7 @@ export default function SorteoCard({
           </div>
         </div>
 
+        {/* fecha + botones */}
         <div className="text-gray-700 mb-4">
           <p>Fecha del sorteo: {fecha}</p>
           <p>Quedan {ticketsDisponibles} tickets disponibles</p>
@@ -89,12 +81,14 @@ export default function SorteoCard({
           >
             Ver Detalles
           </Link>
-          <button
-            onClick={() => router.push(`/participar/${id}`)}
-            className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded font-medium"
+
+          {/* 👇  navegación con ID */}
+          <Link
+            href={`/participar/${id}`}
+            className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded font-medium flex-1 text-center"
           >
             ¡Quiero Participar!
-          </button>
+          </Link>
         </div>
       </div>
     </div>
