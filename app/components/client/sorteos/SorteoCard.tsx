@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import Link from 'next/link';
 import { formatCurrency } from '@/app/utils/formatters';
 
@@ -26,40 +28,40 @@ export default function SorteoCard({
   const router = useRouter();
   const total = ticketsDisponibles + ticketsVendidos;
   const porcentaje = Math.round((ticketsVendidos / total) * 100);
-  
-  // Formatear fecha
+
   const fecha = new Date(fechaSorteo);
   const fechaFormateada = fecha.toLocaleDateString('es-ES', {
     day: 'numeric',
     month: 'long',
     year: 'numeric'
   });
-  
+
   const handleParticipate = () => {
     router.push(`/participar/${id}`);
   };
-  
+
+  // Imagen con fallback
+  const [imgSrc, setImgSrc] = useState(imagenUrl);
+
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
       <div className="h-48 bg-gray-200 relative">
         {/* Imagen del sorteo */}
-        <img 
-          src={imagenUrl} 
-          alt={titulo} 
-          className="w-full h-full object-cover"
-          onError={(e) => {
-            // Si la imagen falla, usar la imagen por defecto
-            (e.target as HTMLImageElement).src = '/images/default-sorteo.jpg';
-          }}
+        <Image
+          src={imgSrc}
+          alt={titulo}
+          fill
+          className="object-cover"
+          onError={() => setImgSrc('/images/fallback-image.jpg')}
         />
         <div className="absolute top-4 right-4 bg-blue-900 text-white py-1 px-3 rounded-full text-sm font-medium">
           {formatCurrency(precio)}
         </div>
       </div>
-      
+
       <div className="p-6">
         <h3 className="text-xl font-bold mb-2">{titulo}</h3>
-        
+
         {/* Barra de progreso */}
         <div className="mb-4">
           <div className="flex justify-between text-sm text-gray-600 mb-1">
@@ -73,12 +75,12 @@ export default function SorteoCard({
             ></div>
           </div>
         </div>
-        
+
         <div className="text-gray-700 mb-4">
           <p>Fecha del sorteo: {fechaFormateada}</p>
           <p>Quedan {ticketsDisponibles} tickets disponibles</p>
         </div>
-        
+
         <div className="flex space-x-2">
           <Link 
             href={`/sorteos/${id}`} 
