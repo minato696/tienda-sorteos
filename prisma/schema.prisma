@@ -69,6 +69,7 @@ model Ticket {
   codigo         String         @unique
   sorteoId       Int
   participanteId Int
+  transaccionId  Int?           // Campo de clave foránea añadido
   compradoEn     DateTime       @default(now())
   status         String         @default("RESERVED") // RESERVED, PAID, CANCELLED
   
@@ -76,7 +77,7 @@ model Ticket {
   sorteo         Sorteo         @relation(fields: [sorteoId], references: [id])
   participante   Participante   @relation(fields: [participanteId], references: [id])
   sorteoGanador  Sorteo?        @relation("GanadorSorteo")
-  transaccion    Transaccion?
+  transaccion    Transaccion?   @relation(fields: [transaccionId], references: [id])
 }
 
 // Transacciones de pago
