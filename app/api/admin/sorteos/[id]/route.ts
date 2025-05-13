@@ -1,162 +1,92 @@
+/**
+ * GET    /api/admin/sorteos/:id → detalle
+ * PUT    /api/admin/sorteos/:id → actualizar
+ * DELETE /api/admin/sorteos/:id → eliminar
+ */
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/app/lib/prisma';
 
-const prisma = new PrismaClient();
+type Params = { id: string };
 
-// GET - Obtener un sorteo por ID
+/* ─────────────────── DETALLE ─────────────────── */
 export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
+  _req: NextRequest,
+  { params }: { params: Params },
 ) {
-  try {
-    const id = parseInt(params.id);
-    
-    if (isNaN(id)) {
-      return NextResponse.json(
-        { error: 'ID de sorteo inválido' },
-        { status: 400 }
-      );
-    }
-    
-    const sorteo = await prisma.sorteo.findUnique({
-      where: { id },
-      include: {
-        _count: {
-          select: {
-            participantes: true,
-            tickets: true
-          }
-        }
-      }
-    });
-    
-    if (!sorteo) {
-      return NextResponse.json(
-        { error: 'Sorteo no encontrado' },
-        { status: 404 }
-      );
-    }
-    
-    return NextResponse.json({ sorteo });
-  } catch (error) {
-    console.error('Error al obtener sorteo:', error);
-    return NextResponse.json(
-      { error: 'Error al obtener sorteo' },
-      { status: 500 }
-    );
-  }
+  const id = Number(params.id);
+  if (!id) return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
+
+  const sorteo = await prisma.sorteo.findUnique({
+    where: { id },
+    include: {
+      _count: {
+        select: { participantes: true, tickets: true },
+      },
+    },
+  });
+  if (!sorteo) return NextResponse.json({ error: 'No encontrado' }, { status: 404 });
+
+  return NextResponse.json(sorteo);
 }
 
-// PUT - Actualizar un sorteo
+/* ─────────────────── ACTUALIZAR ─────────────────── */
 export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
+  req: NextRequest,
+  { params }: { params: Params },
 ) {
+  const id = Number(params.id);
+  if (!id) return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
+
+  const body = await req.json();
   try {
-    const id = parseInt(params.id);
-    
-    if (isNaN(id)) {
-      return NextResponse.json(
-        { error: 'ID de sorteo inválido' },
-        { status: 400 }
-      );
-    }
-    
-    const body = await request.json();
-    
-    // Validar campos requeridos
-    if (!body.titulo || !body.descripcion || !body.precio || !body.fechaSorteo || !body.ticketsDisponibles || !body.premio) {
-      return NextResponse.json(
-        { error: 'Faltan campos requeridos' },
-        { status: 400 }
-      );
-    }
-    
-    // Actualizar el sorteo
-    const sorteo = await prisma.sorteo.update({
+    const actualizado = await prisma.sorteo.update({
       where: { id },
       data: {
         titulo: body.titulo,
         descripcion: body.descripcion,
-        imagenUrl: body.imagenUrl,
-        precio: parseFloat(body.precio),
-        fechaSorteo: new Date(body.fechaSorteo),
-        ticketsDisponibles: parseInt(body.ticketsDisponibles),
-        ticketsVendidos: parseInt(body.ticketsVendidos || 0),
-        estado: body.estado,
+        imagenUrl: body.imagenUrl ?? null,
+        precio: body.precio !== undefined ? Number(body.precio) : undefined,
+        fechaSorteo: body.fechaSorteo ? new Date(body.fechaSorteo) : undefined,
+        ticketsDisponibles:
+          body.ticketsDisponibles !== undefined
+            ? Number(body.ticketsDisponibles)
+            : undefined,
+        estado: body.estado, // 'ACTIVO' | 'FINALIZADO' | 'CANCELADO'
         premio: body.premio,
-        destacado: body.destacado === true || body.destacado === 'true',
-      }
+        valorPremio:
+          body.valorPremio !== undefined ? Number(body.valorPremio) : undefined,
+        destacado: body.destacado,
+      },
     });
-    
-    return NextResponse.json({ 
-      message: 'Sorteo actualizado correctamente',
-      sorteo 
-    });
-  } catch (error) {
-    console.error('Error al actualizar sorteo:', error);
-    return NextResponse.json(
-      { error: 'Error al actualizar sorteo' },
-      { status: 500 }
-    );
+
+    return NextResponse.json(actualizado);
+  } catch (err) {
+    console.error('PUT /admin/sorteos/:id', err);
+    return NextResponse.json({ error: 'No se pudo actualizar' }, { status: 500 });
   }
 }
 
-// DELETE - Eliminar un sorteo
+/* ─────────────────── ELIMINAR ─────────────────── */
 export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
+  _req: NextRequest,
+  { params }: { params: Params },
 ) {
-  try {
-    const id = parseInt(params.id);
-    
-    if (isNaN(id)) {
-      return NextResponse.json(
-        { error: 'ID de sorteo inválido' },
-        { status: 400 }
-      );
-    }
-    
-    // Verificar si hay participantes o tickets asociados
-    const sorteo = await prisma.sorteo.findUnique({
-      where: { id },
-      include: {
-        _count: {
-          select: {
-            participantes: true,
-            tickets: true
-          }
-        }
-      }
-    });
-    
-    if (!sorteo) {
-      return NextResponse.json(
-        { error: 'Sorteo no encontrado' },
-        { status: 404 }
-      );
-    }
-    
-    if (sorteo._count.participantes > 0 || sorteo._count.tickets > 0) {
-      return NextResponse.json(
-        { error: 'No se puede eliminar un sorteo con participantes o tickets asociados' },
-        { status: 400 }
-      );
-    }
-    
-    // Eliminar el sorteo
-    await prisma.sorteo.delete({
-      where: { id }
-    });
-    
-    return NextResponse.json({ 
-      message: 'Sorteo eliminado correctamente'
-    });
-  } catch (error) {
-    console.error('Error al eliminar sorteo:', error);
+  const id = Number(params.id);
+  if (!id) return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
+
+  // Verifica que no existan tickets/participantes
+  const { _count } = await prisma.sorteo.findUniqueOrThrow({
+    where: { id },
+    select: { _count: { select: { tickets: true, participantes: true } } },
+  });
+
+  if (_count.tickets || _count.participantes) {
     return NextResponse.json(
-      { error: 'Error al eliminar sorteo' },
-      { status: 500 }
+      { error: 'No se puede eliminar: tiene registros asociados' },
+      { status: 400 },
     );
   }
+
+  await prisma.sorteo.delete({ where: { id } });
+  return NextResponse.json({ ok: true });
 }

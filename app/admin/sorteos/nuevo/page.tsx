@@ -7,40 +7,39 @@ import { Save, ArrowLeft, Upload, Image } from 'lucide-react';
 
 export default function NuevoSorteoPage() {
   const router = useRouter();
+  /* ---------- STATE ---------- */
   const [formData, setFormData] = useState({
     titulo: '',
     descripcion: '',
     premio: '',
-    precio: '50', // Valor por defecto: 50 soles
+    precio: '50',                // valor por defecto
     fechaSorteo: '',
     ticketsDisponibles: '',
     ticketsVendidos: '0',
-    estado: 'ACTIVO',
-    destacado: false
+    estado: 'ACTIVO',            // ACTIVO | FINALIZADO | CANCELADO | PROXIMAMENTE
+    destacado: false,
   });
-  
+
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>('/images/default-sorteo.jpg');
   const [loading, setLoading] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target as HTMLInputElement;
-    
-    if (type === 'checkbox') {
-      setFormData({
-        ...formData,
-        [name]: (e.target as HTMLInputElement).checked
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value
-      });
-    }
-  };
+  // Verificar si el estado es "PROXIMAMENTE" para deshabilitar campos
+  const isComingSoon = formData.estado === "PROXIMAMENTE";
   
+ /* ---------- HANDLERS ---------- */
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+  ) => {
+    const { name, value, type, checked } = e.target as HTMLInputElement;
+    setFormData((p) => ({
+      ...p,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -235,9 +234,15 @@ export default function NuevoSorteoPage() {
               name="fechaSorteo"
               value={formData.fechaSorteo}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
+              className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${isComingSoon ? 'opacity-50 bg-gray-100' : ''}`}
+              required={!isComingSoon}
+              disabled={isComingSoon}
             />
+            {isComingSoon && (
+              <p className="mt-1 text-xs text-gray-500 italic">
+                Este campo se configurará más adelante
+              </p>
+            )}
           </div>
         </div>
         
@@ -257,9 +262,15 @@ export default function NuevoSorteoPage() {
                 onChange={handleChange}
                 min="0"
                 step="0.01"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
+                className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${isComingSoon ? 'opacity-50 bg-gray-100' : ''}`}
+                required={!isComingSoon}
+                disabled={isComingSoon}
               />
+              {isComingSoon && (
+                <p className="mt-1 text-xs text-gray-500 italic">
+                  Este campo se configurará más adelante
+                </p>
+              )}
             </div>
             
             <div>
@@ -277,6 +288,7 @@ export default function NuevoSorteoPage() {
                 <option value="ACTIVO">Activo</option>
                 <option value="FINALIZADO">Finalizado</option>
                 <option value="CANCELADO">Cancelado</option>
+                <option value="PROXIMAMENTE">Próximamente</option>
               </select>
             </div>
           </div>
@@ -293,11 +305,14 @@ export default function NuevoSorteoPage() {
                 value={formData.ticketsDisponibles}
                 onChange={handleChange}
                 min="1"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
+                className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${isComingSoon ? 'opacity-50 bg-gray-100' : ''}`}
+                required={!isComingSoon}
+                disabled={isComingSoon}
               />
               <p className="mt-1 text-xs text-gray-500">
-                Número total de tickets que pueden venderse para este sorteo
+                {isComingSoon 
+                  ? "Este campo se configurará más adelante" 
+                  : "Número total de tickets que pueden venderse para este sorteo"}
               </p>
             </div>
             

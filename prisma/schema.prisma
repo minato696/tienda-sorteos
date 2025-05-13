@@ -1,55 +1,75 @@
-// prisma/schema.prisma
+// prisma/schema.prisma --------------------------------------------------------
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL")       // variable que Railway ya expone
 }
 
+/* -------------------------------- ENUMS ----------------------------------- */
+enum SorteoEstado {
+  ACTIVO
+  FINALIZADO
+  CANCELADO
+  PROXIMAMENTE   
+}
+
+/* -------------------------------- MODELOS --------------------------------- */
+model Sorteo {
+  id                 Int            @id @default(autoincrement())
+  titulo             String
+  descripcion        String
+  imagenUrl          String         @default("/images/default-sorteo.jpg")
+  precio             Int            // ← entero, sin decimales
+  fechaSorteo        DateTime
+  ticketsDisponibles Int
+  ticketsVendidos    Int            @default(0)
+  estado             SorteoEstado   @default(ACTIVO)
+  premio             String
+  valorPremio        Int?           // ← entero opcional
+  destacado          Boolean        @default(false)
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  participantes      Participante[]
+  tickets            Ticket[]
+
+  proximamente      Boolean       @default(false)
+
+}
+
+
 model Participante {
-  id           Int      @id @default(autoincrement())
-  dni          String
-  nombres      String
-  apellidos    String
-  telefono     String
-  email        String
-  departamento String
-  cantidad     Int      @default(1)
-  fechaRegistro DateTime @default(now())
-  tickets      Ticket[]
-  creadoEn     DateTime @default(now())
-  sorteoId     Int?     // Añadimos la referencia al sorteo
-  sorteo       Sorteo?  @relation(fields: [sorteoId], references: [id])
+  id             Int          @id @default(autoincrement())
+  dni            String       @db.Char(8)
+  nombres        String
+  apellidos      String
+  telefono       String       @db.Char(9)
+  email          String
+  departamento   String
+  cantidad       Int          @default(1)
+  fechaRegistro  DateTime     @default(now())
+
+  sorteoId       Int
+  sorteo         Sorteo       @relation(fields: [sorteoId], references: [id], onDelete: Cascade)
+
+  tickets        Ticket[]
+
+  @@index([sorteoId])
 }
 
 model Ticket {
-  id             Int          @id @default(autoincrement())
-  codigo         String       @unique
-  participante   Participante @relation(fields: [participanteId], references: [id])
-  participanteId Int
-  createdAt      DateTime     @default(now())
-  sorteoId       Int?         // Añadimos la referencia al sorteo
-  sorteo         Sorteo?      @relation(fields: [sorteoId], references: [id])
-}
+  id              Int          @id @default(autoincrement())
+  codigo          String       @unique
+  createdAt       DateTime     @default(now())
 
-// Modelo para Sorteos
-model Sorteo {
-  id                Int           @id @default(autoincrement())
-  titulo            String
-  descripcion       String
-  imagenUrl         String        @default("/images/default-sorteo.jpg")
-  precio            Float         // Precio en Soles Peruanos
-  fechaSorteo       DateTime
-  ticketsDisponibles Int
-  ticketsVendidos   Int           @default(0)
-  estado            String        @default("ACTIVO") // ACTIVO, FINALIZADO, CANCELADO
-  premio            String
-  valorPremio       Float?        // Valor del premio en Soles Peruanos
-  destacado         Boolean       @default(false)
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
-  participantes     Participante[]
-  tickets           Ticket[]
+  participanteId  Int
+  participante    Participante @relation(fields: [participanteId], references: [id], onDelete: Cascade)
+
+  sorteoId        Int
+  sorteo          Sorteo       @relation(fields: [sorteoId], references: [id], onDelete: Cascade)
+
+  @@index([sorteoId])
 }

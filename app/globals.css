@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes confetti-loop {
+  0%   { background-position: 0 0; }
+  100% { background-position: 400px 200px; }
+}
+.animate-confetti {
+  animation: confetti-loop 22s linear infinite;
+}

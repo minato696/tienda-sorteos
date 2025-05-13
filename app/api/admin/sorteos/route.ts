@@ -1,67 +1,78 @@
-/** 
- * app/api/upload/route.ts
- * 
- * Carga de imágenes desde el panel de administrador.
- * 1. Recibe el archivo (campo <input name="imagen" /> o <input name="file" />).
- * 2. Lo convierte a WebP (80 % calidad) con Sharp.
- * 3. Lo guarda en /public/uploads y devuelve la URL pública.
- * 
- * Requisitos:
- *   npm i sharp uuid
- *   (En Windows: instalar las dependencias de Sharp o usar WSL)
+/**
+ * GET  /api/admin/sorteos   → lista todos los sorteos
+ * POST /api/admin/sorteos   → crea un sorteo
  */
-
 import { NextRequest, NextResponse } from 'next/server';
-import sharp from 'sharp';
-import { v4 as uuidv4 } from 'uuid';
-import path from 'path';
-import fs from 'fs/promises';
+import { prisma } from '@/app/lib/prisma';
 
-export const runtime = 'nodejs';          // Asegura que NO se ejecute en Edge
+export const dynamic = 'force-dynamic';
 
+/* ───────────── LISTAR ───────────── */
+export async function GET() {
+  const sorteos = await prisma.sorteo.findMany({
+    orderBy: [{ createdAt: 'desc' }],
+  });
+  return NextResponse.json(sorteos);
+}
+
+/* ───────────── CREAR ───────────── */
 export async function POST(req: NextRequest) {
   try {
-    const formData = await req.formData();
+    const body = await req.json();
 
-    // Permite name="imagen" o name="file"
-    const file =
-      (formData.get('imagen') as File | null) ||
-      (formData.get('file') as File | null);
+    /* 1️⃣  validación mínima */
+    const baseRequired = ['titulo', 'premio', 'estado'];
+    const extraRequired =
+      body.estado === 'PROXIMAMENTE'
+        ? [] // no pedimos precio / fecha / tickets
+        : ['precio', 'fechaSorteo', 'ticketsDisponibles'];
 
-    if (!file) {
-      return NextResponse.json(
-        { error: 'No se recibió ningún archivo' },
-        { status: 400 }
-      );
-    }
-
-    // Solo imágenes (image/png, image/jpeg, etc.)
-    if (!file.type.startsWith('image/')) {
-      return NextResponse.json(
-        { error: 'El archivo debe ser una imagen' },
-        { status: 415 }
-      );
-    }
-
-    // Genera nombre único y carpeta destino
-    const fileName = `${uuidv4()}.webp`;
-    const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
-    const fullPath = path.join(uploadsDir, fileName);
-
-    // Asegura que la carpeta exista
-    await fs.mkdir(uploadsDir, { recursive: true });
-
-    // Convierte a WebP y guarda
-    const buffer = Buffer.from(await file.arrayBuffer());
-    await sharp(buffer).webp({ quality: 80 }).toFile(fullPath);
-
-    // Devuelve la ruta pública para que la guardes en la DB
-    return NextResponse.json({ url: `/uploads/${fileName}` });
-  } catch (err) {
-    console.error('Upload error:', err);
-    return NextResponse.json(
-      { error: 'Error al subir la imagen' },
-      { status: 500 }
+    const missing = [...baseRequired, ...extraRequired].filter(
+      (k) => body[k] === undefined || body[k] === '',
     );
+
+    if (missing.length) {
+      return NextResponse.json(
+        { error: `Faltan campos: ${missing.join(', ')}` },
+        { status: 400 },
+      );
+    }
+
+    /* 2️⃣  fecha válida (placeholder si es Próximamente) */
+    let fecha: Date;
+    if (body.estado === 'PROXIMAMENTE' || !body.fechaSorteo) {
+      fecha = new Date('9999-12-31T23:59:59.999Z'); // muy lejos en el futuro
+    } else {
+      const d = new Date(body.fechaSorteo);
+      if (isNaN(d.getTime())) {
+        return NextResponse.json(
+          { error: 'Fecha de sorteo inválida' },
+          { status: 400 },
+        );
+      }
+      fecha = d;
+    }
+
+    /* 3️⃣  crear sorteo */
+    const nuevo = await prisma.sorteo.create({
+      data: {
+        titulo: body.titulo,
+        descripcion: body.descripcion ?? '',
+        imagenUrl: body.imagenUrl ?? null,
+        precio: Number(body.precio ?? 0),
+        fechaSorteo: fecha,
+        ticketsDisponibles: Number(body.ticketsDisponibles ?? 0),
+        premio: body.premio,
+        valorPremio: body.valorPremio ? Number(body.valorPremio) : null,
+        destacado: Boolean(body.destacado),
+        estado: body.estado, // ACTIVO | FINALIZADO | CANCELADO | PROXIMAMENTE
+        proximamente: body.estado === 'PROXIMAMENTE',
+      },
+    });
+
+    return NextResponse.json(nuevo, { status: 201 });
+  } catch (err) {
+    console.error('POST /api/admin/sorteos', err);
+    return NextResponse.json({ error: 'Error interno' }, { status: 500 });
   }
 }
