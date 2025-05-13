@@ -43,7 +43,8 @@ export default function HeroSection() {
   const swiperRef = useRef<any>(null);
 
   return (
-    <div className="relative w-full h-[60vh] md:h-[75vh]">
+    // Eliminado el margen superior para que esté más cerca de la galería
+    <div className="relative w-full h-[60vh] md:h-[75vh] mt-0">
       {/* Flechas navegación */}
       <button
         aria-label="Anterior"

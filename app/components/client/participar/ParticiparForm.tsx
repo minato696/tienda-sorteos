@@ -146,7 +146,7 @@ export default function ParticiparForm({ sorteo }: Props) {
       <div className="container mx-auto px-4 flex flex-col md:flex-row gap-6 max-w-6xl">
         {/* ---------- INFO SORTEO ---------- */}
         <article className="w-full md:w-1/2 bg-white rounded-lg shadow-md overflow-hidden">
-          <header className="bg-[#192252] text-white p-4">
+          <header className="bg-gradient-secondary text-white p-4">
             <h2 className="text-xl font-bold">{sorteo.titulo}</h2>
           </header>
 
@@ -163,13 +163,13 @@ export default function ParticiparForm({ sorteo }: Props) {
                 Sin imagen
               </p>
             )}
-            <div className="absolute top-4 right-4 bg-[#192252] text-white py-1 px-4 rounded-md shadow-md">
+            <div className="absolute top-4 right-4 bg-sp-blue text-white py-1 px-4 rounded-md shadow-md">
               S/ {precioTicket}
             </div>
           </div>
 
           <div className="p-6 space-y-3">
-            <h3 className="text-2xl font-bold text-[#192252]">
+            <h3 className="text-2xl font-bold text-sp-indigo">
               {sorteo.titulo}
             </h3>
             <p className="text-gray-700">
@@ -178,13 +178,13 @@ export default function ParticiparForm({ sorteo }: Props) {
             <div className="bg-gray-50 p-4 rounded-md border">
               <div className="flex justify-between mb-2">
                 <span className="text-gray-700">Precio por ticket:</span>
-                <span className="font-bold text-[#192252]">
+                <span className="font-bold text-sp-indigo">
                   S/ {precioTicket.toFixed(2)}
                 </span>
               </div>
               <div className="flex justify-between border-t pt-2">
                 <span className="text-gray-700">Total a pagar:</span>
-                <span className="font-bold text-xl text-[#192252]">
+                <span className="font-bold text-xl text-sp-indigo">
                   S/ {(precioTicket * formData.cantidad).toFixed(2)}
                 </span>
               </div>
@@ -194,13 +194,13 @@ export default function ParticiparForm({ sorteo }: Props) {
 
         {/* ---------- FORM ---------- */}
         <section className="w-full md:w-1/2 bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-center mb-6 text-[#192252]">
+          <h2 className="text-2xl font-bold text-center mb-6 text-sp-indigo">
             Regístrate para Participar
           </h2>
 
           {/* mensajes */}
           {error && (
-            <p className="mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded">
+            <p className="mb-4 bg-red-100 border-l-4 border-sp-pink text-red-700 p-4 rounded">
               {error}
             </p>
           )}
@@ -269,7 +269,7 @@ export default function ParticiparForm({ sorteo }: Props) {
             </select>
 
             {/* cantidad */}
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-sp-indigo">
               Cantidad de tickets
             </label>
             <div className="flex items-center">
@@ -299,7 +299,7 @@ export default function ParticiparForm({ sorteo }: Props) {
               <input type="checkbox" required className="mt-1" />
               <span>
                 Acepto los{" "}
-                <Link href="/terminos" className="text-[#192252] underline">
+                <Link href="/terminos" className="text-sp-indigo underline">
                   Términos&nbsp;y&nbsp;Condiciones
                 </Link>
               </span>
@@ -308,7 +308,7 @@ export default function ParticiparForm({ sorteo }: Props) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#e63946] hover:bg-[#d62b39] text-white font-bold py-3 rounded-md"
+              className="w-full bg-sp-pink hover:bg-opacity-90 text-white font-bold py-3 rounded-md"
             >
               {loading
                 ? "Procesando..."
@@ -325,6 +325,6 @@ export default function ParticiparForm({ sorteo }: Props) {
 
 /* ---------- estilos tailwind pequeños ---------- */
 const input =
-  "w-full px-4 py-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#192252]";
+  "w-full px-4 py-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-sp-indigo";
 const btn =
   "px-4 py-2 bg-gray-200 hover:bg-gray-300 transition-colors select-none";

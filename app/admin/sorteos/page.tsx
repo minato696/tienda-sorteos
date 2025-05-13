@@ -57,18 +57,18 @@ export default function SorteosAdmin() {
   const badge = (estado: string) =>
     ({
       ACTIVO: 'bg-green-100 text-green-800',
-      FINALIZADO: 'bg-blue-100 text-blue-800',
-      CANCELADO: 'bg-red-100 text-red-800',
+      FINALIZADO: 'bg-sp-blue/20 text-sp-blue',
+      CANCELADO: 'bg-sp-pink/20 text-sp-pink',
     }[estado] ?? 'bg-gray-100 text-gray-800');
 
   /* ─── render ─── */
   return (
     <div className="container mx-auto p-6">
       <header className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Gestión de Sorteos</h1>
+        <h1 className="text-2xl font-bold text-sp-indigo">Gestión de Sorteos</h1>
         <Link
           href="/admin/sorteos/nuevo"
-          className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          className="inline-flex items-center px-4 py-2 bg-sp-purple text-white rounded hover:bg-opacity-90"
         >
           <Plus className="w-4 h-4 mr-2" />
           Nuevo Sorteo
@@ -76,21 +76,21 @@ export default function SorteosAdmin() {
       </header>
 
       {error && (
-        <p className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6">
+        <p className="bg-red-100 border-l-4 border-sp-pink text-red-700 p-4 mb-6">
           {error}
         </p>
       )}
 
       {loading ? (
         <div className="flex justify-center h-64 items-center">
-          <span className="animate-spin h-12 w-12 border-4 rounded-full border-blue-500 border-t-transparent" />
+          <span className="animate-spin h-12 w-12 border-4 rounded-full border-sp-blue border-t-transparent" />
         </div>
       ) : sorteos.length === 0 ? (
         <div className="bg-white rounded-lg shadow-md p-6 text-center">
           <p className="text-gray-500 mb-4">No hay sorteos disponibles.</p>
           <Link
             href="/admin/sorteos/nuevo"
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            className="px-4 py-2 bg-sp-purple text-white rounded hover:bg-opacity-90"
           >
             Crear Primer Sorteo
           </Link>
@@ -127,7 +127,7 @@ export default function SorteosAdmin() {
                         />
                       )}
                       <div>
-                        <div className="font-medium text-gray-900">
+                        <div className="font-medium text-sp-indigo">
                           {s.titulo}
                         </div>
                         <div className="text-gray-500 text-xs">
@@ -148,7 +148,7 @@ export default function SorteosAdmin() {
                       </div>
                       <div className="w-24 h-1.5 bg-gray-200 rounded-full">
                         <div
-                          className="h-1.5 bg-blue-600 rounded-full"
+                          className="h-1.5 bg-sp-blue rounded-full"
                           style={{ width: `${pct}%` }}
                         />
                       </div>
@@ -173,7 +173,7 @@ export default function SorteosAdmin() {
                     {/* proximamente */}
                     <td className="px-6 py-4">
                       {s.proximamente ? (
-                        <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-sp-cyan/20 text-sp-cyan">
                           Sí
                         </span>
                       ) : (
@@ -193,14 +193,14 @@ export default function SorteosAdmin() {
                         </Link>
                         <Link
                           href={`/admin/sorteos/${s.id}/editar`}
-                          className="text-blue-600 hover:text-blue-900"
+                          className="text-sp-blue hover:text-sp-indigo"
                           title="Editar"
                         >
                           <Edit className="w-5 h-5" />
                         </Link>
                         <button
                           onClick={() => handleDelete(s.id)}
-                          className="text-red-600 hover:text-red-900"
+                          className="text-sp-pink hover:text-red-900"
                           title="Eliminar"
                         >
                           <Trash className="w-5 h-5" />

@@ -8,19 +8,22 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   const NavItem = (href: string, label: string) => (
-    <Link href={href} className="hover:text-yellow-400 font-medium">
+    <Link 
+      href={href} 
+      className="hover:text-sp-cyan font-medium transition-all hover:translate-y-[1px]"
+    >
       {label}
     </Link>
   );
 
   return (
-    /* sticky: se queda pegado debajo del banner (56 px) */
-    <nav className="sticky top-14 z-[999] w-full bg-gradient-to-r from-blue-900 to-blue-950 text-white shadow-md py-6">
-      <div className="container mx-auto px-4 flex justify-between items-center">
+    // Quitamos la clase shadow-md para evitar cualquier separación visual
+    <nav className="w-full bg-gradient-nav text-white">
+      <div className="container mx-auto px-4 flex justify-between items-center h-14">
         {/* ─── Logo ─── */}
-        <Link href="/" className="flex items-center text-2xl font-bold">
+        <Link href="/" className="flex items-center text-xl font-bold">
           <span className="mr-1">Sorteos</span>
-          <span className="text-yellow-500">Premium</span>
+          <span className="text-sp-cyan">Premium</span>
         </Link>
 
         {/* ─── Navegación escritorio ─── */}
@@ -32,22 +35,22 @@ export default function Navbar() {
         </div>
 
         {/* ─── Acciones escritorio ─── */}
-        <div className="hidden md:flex items-center space-x-4">
-          <Link href="/mi-cuenta" className="flex items-center hover:text-yellow-400">
-            <User size={20} className="mr-1" />
+        <div className="hidden md:flex items-center space-x-5">
+          <Link href="/mi-cuenta" className="flex items-center hover:text-sp-cyan transition-all">
+            <User size={17} className="mr-1" />
             <span>Mi Cuenta</span>
           </Link>
 
           <Link href="/carrito" className="relative flex items-center">
-            <ShoppingCart size={20} />
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+            <ShoppingCart size={17} />
+            <span className="absolute -top-2 -right-2 bg-sp-pink text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-md shadow-sp-pink/30">
               2
             </span>
           </Link>
 
           <Link
             href="/tickets"
-            className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded font-medium whitespace-nowrap"
+            className="bg-sp-pink hover:bg-opacity-90 px-4 py-1.5 rounded-md font-medium whitespace-nowrap shadow-md shadow-sp-pink/20 hover:shadow-sp-pink/40 transition-all hover:translate-y-[1px]"
           >
             Comprar Tickets
           </Link>
@@ -57,21 +60,21 @@ export default function Navbar() {
         <button
           onClick={() => setOpen(!open)}
           aria-label="Menú"
-          className="md:hidden text-white"
+          className="md:hidden text-white hover:text-sp-cyan transition-colors"
         >
-          {open ? <X size={26} /> : <Menu size={26} />}
+          {open ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
       {/* ─── Menú móvil ─── */}
       {open && (
-        <div className="md:hidden bg-blue-950 px-4 py-3 space-y-3">
+        <div className="md:hidden bg-sp-indigo px-4 py-3 space-y-3 shadow-lg">
           {NavItem('/', 'Inicio')}
           {NavItem('/sorteos', 'Sorteos Activos')}
           {NavItem('/como-funciona', 'Cómo Funciona')}
           {NavItem('/ganadores', 'Ganadores')}
 
-          <Link href="/mi-cuenta" className="flex items-center hover:text-yellow-400">
+          <Link href="/mi-cuenta" className="flex items-center hover:text-sp-cyan">
             <User size={18} className="mr-2" />
             <span>Mi Cuenta</span>
           </Link>
@@ -83,7 +86,7 @@ export default function Navbar() {
 
           <Link
             href="/tickets"
-            className="block bg-red-600 hover:bg-red-700 py-2 rounded font-medium text-center mt-2"
+            className="block bg-sp-pink hover:bg-opacity-90 py-2 rounded-md font-medium text-center mt-2 shadow-md"
           >
             Comprar Tickets
           </Link>

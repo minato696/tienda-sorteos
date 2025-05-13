@@ -1,3 +1,4 @@
+// app/page.tsx - Ajustado para espaciado estilo VAOPE
 import { prisma } from '@/app/lib/prisma';
 import ThumbnailGallery from '@/app/components/server/layout/ThumbnailGallery';
 import HeroSection from '@/app/components/server/layout/HeroSection';
@@ -27,15 +28,15 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* ─────────── Galería de miniaturas desplazada 80 px ─────────── */}
-      <div className="pt-20">
+      {/* Galería de miniaturas con espaciado similar a VAOPE */}
+      <div className="mt-3">
         <ThumbnailGallery />
       </div>
 
-      {/* ─────────── Hero con slider grande ─────────── */}
+      {/* Hero section */}
       <HeroSection />
 
-      {/* ─────────── Sección de sorteos ─────────── */}
+      {/* Sección de sorteos */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-2">
@@ -68,7 +69,7 @@ export default async function HomePage() {
           <div className="text-center mt-10">
             <Link
               href="/sorteos"
-              className="inline-block bg-blue-900 hover:bg-blue-800 text-white px-6 py-3 rounded-md font-semibold"
+              className="inline-block bg-sp-indigo hover:bg-opacity-90 text-white px-6 py-3 rounded-md font-semibold"
             >
               Ver Todos los Sorteos
             </Link>

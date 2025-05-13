@@ -20,19 +20,23 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body className={`${inter.className} bg-gray-50`}>
-        {/* Banner con contador (fixed, z-60) */}
-        <CountdownBanner />
+      <body className={`${inter.className} bg-gray-50 m-0 p-0`}>
+        {/* Header contenedor sin espacios entre elementos */}
+        <header className="sticky-header">
+          {/* Banner de cuenta regresiva con mayor altura - 56px */}
+          <div className="countdown-wrapper" style={{ height: '56px' }}>
+            <CountdownBanner />
+          </div>
 
-        {/* Navbar desplazado 48 px hacia abajo (clase top-12 añadida en Navbar.tsx) */}
-        <Navbar />
+          {/* Navbar sin separación del banner */}
+          <Navbar />
+        </header>
 
-        {/* Contenido principal; pt-12 evita que quede tapado */}
-        <main className="pt-12">{children}</main>
+        {/* Contenido principal */}
+        <main>{children}</main>
 
         <Footer />
       </body>
-      
     </html>
   );
 }

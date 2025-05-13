@@ -52,13 +52,13 @@ export default function SorteoCard({
         />
 
         {/* precio */}
-        <span className="absolute top-3 right-3 bg-blue-900 text-white text-xs font-bold px-3 py-1 rounded-full shadow">
+        <span className="absolute top-3 right-3 bg-sp-blue text-white text-xs font-bold px-3 py-1 rounded-full shadow">
           S/ {precio}
         </span>
 
         {/* cinta Próximamente */}
         {proximamente && (
-          <span className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-yellow-400 text-gray-900 text-xs font-bold px-3 py-1 rounded-full shadow">
+          <span className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-sp-cyan text-sp-indigo text-xs font-bold px-3 py-1 rounded-full shadow">
             Próximamente
           </span>
         )}
@@ -66,7 +66,7 @@ export default function SorteoCard({
 
       {/* cuerpo */}
       <div className="p-5 space-y-3">
-        <h3 className="text-lg font-bold text-gray-800 line-clamp-2">
+        <h3 className="text-lg font-bold text-sp-indigo line-clamp-2">
           {titulo}
         </h3>
 
@@ -79,7 +79,7 @@ export default function SorteoCard({
         <div className="flex space-x-2 pt-2">
           <Link
             href={`/sorteos/${id}`}
-            className="flex-1 text-center bg-blue-900 hover:bg-blue-800 text-white py-2 rounded-md text-sm font-medium"
+            className="flex-1 text-center bg-sp-indigo hover:bg-opacity-90 text-white py-2 rounded-md text-sm font-medium"
           >
             Ver Detalles
           </Link>
@@ -92,7 +92,7 @@ export default function SorteoCard({
             className={`flex-1 text-center py-2 rounded-md text-sm font-medium ${
               proximamente
                 ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                : 'bg-red-600 hover:bg-red-700 text-white'
+                : 'bg-sp-pink hover:bg-opacity-90 text-white'
             }`}
           >
             ¡Quiero Participar!

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="2000px" height="1000px" viewBox="0 0 2000 1000" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <g stroke="none" fill="none" fill-rule="evenodd">
+        <!-- Pink confetti -->
+        <circle fill="#F72585" opacity="0.6" cx="200" cy="150" r="12"></circle>
+        <circle fill="#F72585" opacity="0.6" cx="550" cy="350" r="8"></circle>
+        <circle fill="#F72585" opacity="0.6" cx="1200" cy="250" r="14"></circle>
+        <circle fill="#F72585" opacity="0.6" cx="1600" cy="550" r="10"></circle>
+        <rect fill="#F72585" opacity="0.6" x="400" y="200" width="12" height="12" rx="2"></rect>
+        <rect fill="#F72585" opacity="0.6" x="900" y="450" width="16" height="16" rx="2"></rect>
+        <rect fill="#F72585" opacity="0.6" x="1350" y="150" width="10" height="10" rx="2"></rect>
+        <rect fill="#F72585" opacity="0.6" x="1800" y="350" width="14" height="14" rx="2"></rect>
+        
+        <!-- Purple confetti -->
+        <circle fill="#7209B7" opacity="0.6" cx="350" cy="250" r="10"></circle>
+        <circle fill="#7209B7" opacity="0.6" cx="700" cy="150" r="16"></circle>
+        <circle fill="#7209B7" opacity="0.6" cx="1050" cy="500" r="12"></circle>
+        <circle fill="#7209B7" opacity="0.6" cx="1500" cy="200" r="8"></circle>
+        <rect fill="#7209B7" opacity="0.6" x="150" y="400" width="14" height="14" rx="2"></rect>
+        <rect fill="#7209B7" opacity="0.6" x="800" y="250" width="10" height="10" rx="2"></rect>
+        <rect fill="#7209B7" opacity="0.6" x="1250" y="400" width="16" height="16" rx="2"></rect>
+        <rect fill="#7209B7" opacity="0.6" x="1700" y="150" width="12" height="12" rx="2"></rect>
+        
+        <!-- Blue confetti -->
+        <circle fill="#4361EE" opacity="0.6" cx="100" cy="350" r="14"></circle>
+        <circle fill="#4361EE" opacity="0.6" cx="600" cy="250" r="10"></circle>
+        <circle fill="#4361EE" opacity="0.6" cx="950" cy="150" r="8"></circle>
+        <circle fill="#4361EE" opacity="0.6" cx="1400" cy="400" r="12"></circle>
+        <rect fill="#4361EE" opacity="0.6" x="300" y="150" width="10" height="10" rx="2"></rect>
+        <rect fill="#4361EE" opacity="0.6" x="750" y="450" width="14" height="14" rx="2"></rect>
+        <rect fill="#4361EE" opacity="0.6" x="1100" cy="300" width="12" height="12" rx="2"></rect>
+        <rect fill="#4361EE" opacity="0.6" x="1550" y="250" width="16" height="16" rx="2"></rect>
+        
+        <!-- Cyan confetti -->
+        <circle fill="#4CC9F0" opacity="0.6" cx="250" cy="450" r="8"></circle>
+        <circle fill="#4CC9F0" opacity="0.6" cx="650" cy="350" r="12"></circle>
+        <circle fill="#4CC9F0" opacity="0.6" cx="1000" cy="250" r="16"></circle>
+        <circle fill="#4CC9F0" opacity="0.6" cx="1450" cy="150" r="10"></circle>
+        <rect fill="#4CC9F0" opacity="0.6" x="450" y="300" width="16" height="16" rx="2"></rect>
+        <rect fill="#4CC9F0" opacity="0.6" x="850" cy="150" width="12" height="12" rx="2"></rect>
+        <rect fill="#4CC9F0" opacity="0.6" x="1300" y="350" width="10" height="10" rx="2"></rect>
+        <rect fill="#4CC9F0" opacity="0.6" x="1750" y="450" width="14" height="14" rx="2"></rect>
+        
+        <!-- Small stars -->
+        <path fill="#F72585" opacity="0.6" d="M180,100 L185,115 L200,120 L185,125 L180,140 L175,125 L160,120 L175,115 Z"></path>
+        <path fill="#7209B7" opacity="0.6" d="M480,300 L485,315 L500,320 L485,325 L480,340 L475,325 L460,320 L475,315 Z"></path>
+        <path fill="#4361EE" opacity="0.6" d="M780,200 L785,215 L800,220 L785,225 L780,240 L775,225 L760,220 L775,215 Z"></path>
+        <path fill="#4CC9F0" opacity="0.6" d="M1080,400 L1085,415 L1100,420 L1085,425 L1080,440 L1075,425 L1060,420 L1075,415 Z"></path>
+        <path fill="#F72585" opacity="0.6" d="M1380,100 L1385,115 L1400,120 L1385,125 L1380,140 L1375,125 L1360,120 L1375,115 Z"></path>
+        <path fill="#7209B7" opacity="0.6" d="M1680,300 L1685,315 L1700,320 L1685,325 L1680,340 L1675,325 L1660,320 L1675,315 Z"></path>
+        
+        <!-- Ribbon pieces -->
+        <rect fill="#F72585" opacity="0.6" transform="rotate(45)" x="300" y="-100" width="30" height="6" rx="2"></rect>
+        <rect fill="#7209B7" opacity="0.6" transform="rotate(30)" x="600" y="200" width="40" height="6" rx="2"></rect>
+        <rect fill="#4361EE" opacity="0.6" transform="rotate(60)" x="500" y="400" width="25" height="5" rx="2"></rect>
+        <rect fill="#4CC9F0" opacity="0.6" transform="rotate(15)" x="900" y="100" width="35" height="7" rx="2"></rect>
+        <rect fill="#F72585" opacity="0.6" transform="rotate(75)" x="1000" y="-300" width="45" height="8" rx="2"></rect>
+        <rect fill="#7209B7" opacity="0.6" transform="rotate(40)" x="1200" y="200" width="30" height="6" rx="2"></rect>
+    </g>
+</svg>
