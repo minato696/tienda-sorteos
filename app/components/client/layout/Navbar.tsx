@@ -7,31 +7,31 @@ import { Menu, X, User, ShoppingCart } from 'lucide-react';
 export default function Navbar() {
   const [open, setOpen] = useState(false);
 
-  const navLink = (href: string, label: string) => (
+  const NavItem = (href: string, label: string) => (
     <Link href={href} className="hover:text-yellow-400 font-medium">
       {label}
     </Link>
   );
 
   return (
-    /* mt-14 desplaza el navbar por debajo del banner fijo */
-    <nav className="w-full bg-gradient-to-r from-blue-900 to-blue-950 text-white shadow-md py-6 mt-14">
+    /* sticky: se queda pegado debajo del banner (56 px) */
+    <nav className="sticky top-14 z-[999] w-full bg-gradient-to-r from-blue-900 to-blue-950 text-white shadow-md py-6">
       <div className="container mx-auto px-4 flex justify-between items-center">
-        {/* Logo */}
+        {/* ─── Logo ─── */}
         <Link href="/" className="flex items-center text-2xl font-bold">
           <span className="mr-1">Sorteos</span>
           <span className="text-yellow-500">Premium</span>
         </Link>
 
-        {/* Navegación escritorio */}
+        {/* ─── Navegación escritorio ─── */}
         <div className="hidden md:flex space-x-8">
-          {navLink('/', 'Inicio')}
-          {navLink('/sorteos', 'Sorteos Activos')}
-          {navLink('/como-funciona', 'Cómo Funciona')}
-          {navLink('/ganadores', 'Ganadores')}
+          {NavItem('/', 'Inicio')}
+          {NavItem('/sorteos', 'Sorteos Activos')}
+          {NavItem('/como-funciona', 'Cómo Funciona')}
+          {NavItem('/ganadores', 'Ganadores')}
         </div>
 
-        {/* Acciones escritorio */}
+        {/* ─── Acciones escritorio ─── */}
         <div className="hidden md:flex items-center space-x-4">
           <Link href="/mi-cuenta" className="flex items-center hover:text-yellow-400">
             <User size={20} className="mr-1" />
@@ -53,23 +53,23 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Botón menú móvil */}
+        {/* ─── Botón menú móvil ─── */}
         <button
-          className="md:hidden text-white"
           onClick={() => setOpen(!open)}
           aria-label="Menú"
+          className="md:hidden text-white"
         >
           {open ? <X size={26} /> : <Menu size={26} />}
         </button>
       </div>
 
-      {/* Menú desplegable móvil */}
+      {/* ─── Menú móvil ─── */}
       {open && (
         <div className="md:hidden bg-blue-950 px-4 py-3 space-y-3">
-          {navLink('/', 'Inicio')}
-          {navLink('/sorteos', 'Sorteos Activos')}
-          {navLink('/como-funciona', 'Cómo Funciona')}
-          {navLink('/ganadores', 'Ganadores')}
+          {NavItem('/', 'Inicio')}
+          {NavItem('/sorteos', 'Sorteos Activos')}
+          {NavItem('/como-funciona', 'Cómo Funciona')}
+          {NavItem('/ganadores', 'Ganadores')}
 
           <Link href="/mi-cuenta" className="flex items-center hover:text-yellow-400">
             <User size={18} className="mr-2" />
