@@ -34,8 +34,7 @@ export default function CountdownBannerSingleLine({
   const days = Math.floor(diff / 1000 / 60 / 60 / 24);
 
   return (
-      <div className="relative w-full h-full flex items-center bg-gradient-to-r from-sp-indigo via-sp-blue to-sp-cyan py-4">
-
+    <div className="relative w-full h-full flex items-center bg-gradient-theme py-4 theme-transition">
       {/* Confetti floating effect - absolute positioned */}
       <div className="confetti-container absolute inset-0">
         {Array.from({ length: 30 }).map((_, i) => (
@@ -47,7 +46,11 @@ export default function CountdownBannerSingleLine({
               top: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 5}s`,
               backgroundColor: [
-                '#F72585', '#7209B7', '#3A0CA3', '#4361EE', '#4CC9F0'
+                'var(--color-primary)',
+                'var(--color-secondary)',
+                'var(--color-accent)',
+                'var(--color-highlight)',
+                '#FFFFFF'
               ][Math.floor(Math.random() * 5)],
               width: `${3 + Math.random() * 4}px`,
               height: `${3 + Math.random() * 4}px`,
@@ -57,87 +60,51 @@ export default function CountdownBannerSingleLine({
         ))}
       </div>
       
-      {/* Todo en una sola línea - con más altura */}
+      {/* Todo en una sola línea - con más altura y elegancia */}
       <div className="container mx-auto px-4 flex justify-center">
-        <div className="flex items-center">
-          {/* Título y subtítulo */}
-          <div className="flex items-center mr-6">
-            <span className="text-white font-bold text-lg">{title}</span>
-            <span className="text-white text-sm opacity-90 font-medium ml-2 hidden md:inline">{subtitle}</span>
+        <div className="flex flex-col md:flex-row items-center">
+          {/* Título y subtítulo con mejor espaciado */}
+          <div className="flex flex-col md:flex-row md:items-center mb-3 md:mb-0 md:mr-8">
+            <span className="text-theme-text-inverted font-bold text-xl md:text-2xl tracking-tight">{title}</span>
+            <span className="text-theme-text-inverted text-sm opacity-90 font-medium md:ml-3">{subtitle}</span>
           </div>
           
-          {/* Contador con más espacio vertical */}
-          <div className="flex items-end space-x-4">
+          {/* Contador con más espacio vertical y cuidado estético */}
+          <div className="flex items-end space-x-4 md:space-x-5">
             {/* Días */}
             <div className="text-center">
-              <div className="bg-white w-12 h-10 rounded flex items-center justify-center shadow-sm">
-                <span className="text-sp-indigo font-bold text-lg">{String(days).padStart(2, '0')}</span>
+              <div className="bg-white w-14 h-14 rounded-lg flex items-center justify-center shadow-md transform transition-transform hover:scale-105">
+                <span className="text-theme-primary font-bold text-2xl">{String(days).padStart(2, '0')}</span>
               </div>
-              <span className="text-white text-[9px] font-medium block mt-1">Días</span>
+              <span className="text-theme-text-inverted text-xs font-medium block mt-1">Días</span>
             </div>
             
             {/* Horas */}
             <div className="text-center">
-              <div className="bg-white w-10 h-10 rounded flex items-center justify-center shadow-sm">
-                <span className="text-sp-indigo font-bold text-lg">{String(hrs).padStart(2, '0')}</span>
+              <div className="bg-white w-14 h-14 rounded-lg flex items-center justify-center shadow-md transform transition-transform hover:scale-105">
+                <span className="text-theme-primary font-bold text-2xl">{String(hrs).padStart(2, '0')}</span>
               </div>
-              <span className="text-white text-[9px] font-medium block mt-1">Horas</span>
+              <span className="text-theme-text-inverted text-xs font-medium block mt-1">Horas</span>
             </div>
             
             {/* Minutos */}
             <div className="text-center">
-              <div className="bg-white w-10 h-10 rounded flex items-center justify-center shadow-sm">
-                <span className="text-sp-indigo font-bold text-lg">{String(min).padStart(2, '0')}</span>
+              <div className="bg-white w-14 h-14 rounded-lg flex items-center justify-center shadow-md transform transition-transform hover:scale-105">
+                <span className="text-theme-primary font-bold text-2xl">{String(min).padStart(2, '0')}</span>
               </div>
-              <span className="text-white text-[9px] font-medium block mt-1">Min</span>
+              <span className="text-theme-text-inverted text-xs font-medium block mt-1">Min</span>
             </div>
             
             {/* Segundos */}
             <div className="text-center">
-              <div className="bg-white w-10 h-10 rounded flex items-center justify-center shadow-sm">
-                <span className="text-sp-indigo font-bold text-lg">{String(sec).padStart(2, '0')}</span>
+              <div className="bg-white w-14 h-14 rounded-lg flex items-center justify-center shadow-md transform transition-transform hover:scale-105">
+                <span className="text-theme-primary font-bold text-2xl">{String(sec).padStart(2, '0')}</span>
               </div>
-              <span className="text-white text-[9px] font-medium block mt-1">Seg</span>
+              <span className="text-theme-text-inverted text-xs font-medium block mt-1">Seg</span>
             </div>
           </div>
         </div>
       </div>
     </div>
   );
-}
-
-/* CSS para los efectos de confeti flotando */
-const style = `
-@keyframes confettiFall {
-  0% { transform: translateY(-100%) rotate(0deg); }
-  100% { transform: translateY(100vh) rotate(360deg); }
-}
-
-.confetti-container {
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.confetti-piece {
-  position: absolute;
-  border-radius: 2px;
-  animation: confettiFall 10s linear infinite;
-}
-
-/* Reducimos la animación en dispositivos que prefieren menos movimiento */
-@media (prefers-reduced-motion: reduce) {
-  .confetti-piece {
-    animation: none;
-  }
-}
-`;
-
-if (typeof document !== 'undefined') {
-  // Solo agregamos el estilo si no existe previamente
-  if (!document.getElementById('confetti-style')) {
-    const styleElement = document.createElement('style');
-    styleElement.id = 'confetti-style';
-    styleElement.innerHTML = style;
-    document.head.appendChild(styleElement);
-  }
 }

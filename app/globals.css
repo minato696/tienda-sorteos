@@ -2,3 +2,169 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Colores por defecto (se sobrescribirán con JavaScript) */
+  --color-primary: #6320EE;
+  --color-secondary: #E61E8C;
+  --color-accent: #00D4FF;
+  --color-highlight: #FFB800;
+  
+  --color-bg-main: #F8F9FF;
+  --color-bg-alt: #ECEEFF;
+  
+  --color-text-primary: #1A1C37;
+  --color-text-secondary: #4A4B62;
+  --color-text-inverted: #FFFFFF;
+  
+  --color-ui-card: #FFFFFF;
+  --color-ui-border: #E2E3F3;
+  --color-ui-hover: #F0F1FF;
+  
+  --color-status-success: #2DD4BF;
+  --color-status-warning: #FBBF24;
+  --color-status-error: #F43F5E;
+  --color-status-info: #3B82F6;
+  
+  /* Transiciones suaves al cambiar de tema */
+  --transition-speed: 0.3s;
+}
+
+/* Clases de utilidad para los colores del tema */
+.bg-theme-primary { background-color: var(--color-primary); }
+.bg-theme-secondary { background-color: var(--color-secondary); }
+.bg-theme-accent { background-color: var(--color-accent); }
+.bg-theme-highlight { background-color: var(--color-highlight); }
+.bg-theme-main { background-color: var(--color-bg-main); }
+.bg-theme-alt { background-color: var(--color-bg-alt); }
+.bg-theme-card { background-color: var(--color-ui-card); }
+
+.text-theme-primary { color: var(--color-primary); }
+.text-theme-secondary { color: var(--color-secondary); }
+.text-theme-accent { color: var(--color-accent); }
+.text-theme-highlight { color: var(--color-highlight); }
+.text-theme-main { color: var(--color-text-primary); }
+.text-theme-secondary { color: var(--color-text-secondary); }
+.text-theme-inverted { color: var(--color-text-inverted); }
+
+.border-theme { border-color: var(--color-ui-border); }
+.hover-theme { background-color: var(--color-ui-hover); }
+
+.success-theme { color: var(--color-status-success); }
+.warning-theme { color: var(--color-status-warning); }
+.error-theme { color: var(--color-status-error); }
+.info-theme { color: var(--color-status-info); }
+
+/* Gradientes para fondos y elementos especiales */
+.bg-gradient-theme {
+  background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+}
+
+.bg-gradient-theme-alt {
+  background: linear-gradient(to right, var(--color-accent), var(--color-primary));
+}
+
+.bg-gradient-festive {
+  background: linear-gradient(to right, var(--color-highlight), var(--color-secondary), var(--color-accent));
+}
+
+/* Animaciones y transiciones para elementos interactivos */
+.theme-transition {
+  transition: all var(--transition-speed) ease-in-out;
+}
+
+/* Estilos para el banner de cuenta regresiva */
+.countdown-wrapper {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Efecto de confeti flotante */
+@keyframes confettiFall {
+  0% { transform: translateY(-100%) rotate(0deg); }
+  100% { transform: translateY(100vh) rotate(360deg); }
+}
+
+.confetti-container {
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  border-radius: 2px;
+  animation: confettiFall 10s linear infinite;
+}
+
+/* Estilos para las tarjetas de sorteo */
+.card-sorteo {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-sorteo:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Botones con estilos temáticos */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverted);
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  filter: brightness(110%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-secondary {
+  background-color: var(--color-secondary);
+  color: var(--color-text-inverted);
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  filter: brightness(110%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-accent {
+  background-color: var(--color-accent);
+  color: var(--color-text-primary);
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-accent:hover {
+  filter: brightness(110%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Reduce animaciones si el usuario prefiere menos movimiento */
+@media (prefers-reduced-motion: reduce) {
+  .confetti-piece,
+  .theme-transition,
+  .card-sorteo,
+  .btn-primary,
+  .btn-secondary,
+  .btn-accent {
+    transition: none;
+    animation: none;
+    transform: none;
+  }
+}

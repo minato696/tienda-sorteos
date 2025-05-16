@@ -1,113 +1,80 @@
-'use client';
-
-import { useRef } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, EffectFade, Navigation, Pagination } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/effect-fade';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-
-/* imágenes del hero */
-const slides = [
-  {
-    src: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&w=1600&q=80',
-    filter: 'bg-blue-600/20', // tono azulado
-    motion: { scale: 1.15, rotate: -2 },
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1561134266-22b120e75ae1?auto=format&w=1600&q=80',
-    filter: 'bg-pink-600/20',
-    motion: { scale: 1.1, x: '-6%' },
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&w=1600&q=80',
-    filter: 'bg-yellow-500/20',
-    motion: { scale: 1.2, rotate: 2 },
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1542751110-97427bbecf20?auto=format&w=1600&q=80',
-    filter: 'bg-teal-500/20',
-    motion: { scale: 1.12, x: '5%' },
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1465447142348-e9952c393450?auto=format&w=1600&q=80',
-    filter: 'bg-purple-600/20',
-    motion: { scale: 1.18, rotate: -3 },
-  },
-];
+import Link from 'next/link';
+import Image from 'next/image';
 
 export default function HeroSection() {
-  const swiperRef = useRef<any>(null);
-
   return (
-    // Eliminado el margen superior para que esté más cerca de la galería
-    <div className="relative w-full h-[60vh] md:h-[75vh] mt-0">
-      {/* Flechas navegación */}
-      <button
-        aria-label="Anterior"
-        onClick={() => swiperRef.current?.slidePrev()}
-        className="absolute z-20 left-4 top-1/2 -translate-y-1/2 bg-white/60 hover:bg-white text-blue-900 p-3 rounded-full backdrop-blur shadow"
-      >
-        <ChevronLeft className="w-5 h-5" />
-      </button>
-      <button
-        aria-label="Siguiente"
-        onClick={() => swiperRef.current?.slideNext()}
-        className="absolute z-20 right-4 top-1/2 -translate-y-1/2 bg-white/60 hover:bg-white text-blue-900 p-3 rounded-full backdrop-blur shadow"
-      >
-        <ChevronRight className="w-5 h-5" />
-      </button>
-
-      {/* Slider */}
-      <Swiper
-        modules={[Autoplay, EffectFade, Navigation, Pagination]}
-        effect="fade"
-        autoplay={{ delay: 5000, disableOnInteraction: false }}
-        loop
-        pagination={{ clickable: true }}
-        onSwiper={(s) => (swiperRef.current = s)}
-        className="w-full h-full"
-      >
-        {slides.map(({ src, filter, motion: anim }, idx) => (
-          <SwiperSlide key={idx}>
-            <div className="relative h-full w-full overflow-hidden">
-              {/* Imagen animada Ken-Burns con parámetro distinto */}
-              <motion.img
-                src={src}
-                alt={`Hero ${idx + 1}`}
-                initial={anim}
-                animate={{ scale: 1, x: 0, rotate: 0 }}
-                transition={{ duration: 6, ease: 'easeOut' }}
-                className="h-full w-full object-cover"
-              />
-
-              {/* Overlay degradado + filtro de color único */}
-              <div
-                className={`absolute inset-0 ${filter} mix-blend-multiply`}
-              />
-              <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/60" />
-
-              {/* Texto central */}
-              <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.9, delay: 0.4 }}
-                className="absolute inset-0 flex flex-col items-center justify-center text-center px-4"
+    <section className="bg-gradient-festive text-theme-text-inverted py-16 md:py-24">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+          <div className="order-2 md:order-1">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              Gana premios increíbles con solo un ticket
+            </h1>
+            <p className="text-lg mb-8 opacity-90">
+              Sorteos 100% legales y transparentes. Transmitidos en vivo para garantizar la legitimidad de cada ganador.
+            </p>
+            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+              <Link 
+                href="/sorteos" 
+                className="btn-primary bg-white text-theme-primary hover:bg-opacity-90"
               >
-                <h2 className="text-4xl md:text-6xl font-extrabold text-yellow-400 drop-shadow-md">
-                  ¡Participa y gana!
-                </h2>
-                <p className="mt-4 text-lg md:text-2xl text-white max-w-2xl drop-shadow-md">
-                  Compra tu ticket y entra en el sorteo de increíbles premios
-                </p>
-              </motion.div>
+                Ver sorteos activos
+              </Link>
+              <Link 
+                href="/como-funciona" 
+                className="btn-secondary"
+              >
+                ¿Cómo funciona?
+              </Link>
             </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    </div>
+            
+            {/* Estadísticas */}
+            <div className="mt-10 grid grid-cols-3 gap-4">
+              <div className="text-center">
+                <div className="text-3xl md:text-4xl font-bold">+50</div>
+                <div className="text-sm opacity-80">Premios entregados</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl md:text-4xl font-bold">12K+</div>
+                <div className="text-sm opacity-80">Clientes satisfechos</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl md:text-4xl font-bold">100%</div>
+                <div className="text-sm opacity-80">Transparencia</div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="order-1 md:order-2 flex justify-center">
+            <div className="relative h-80 w-80 md:h-96 md:w-96 animate-float">
+              <div className="absolute -top-6 -right-6 bg-theme-accent rounded-full h-20 w-20 flex items-center justify-center text-theme-text-primary font-bold transform rotate-12 shadow-lg">
+                <div className="text-center">
+                  <div className="text-xs">DESDE</div>
+                  <div className="text-xl">S/30</div>
+                </div>
+              </div>
+              <div className="h-full w-full bg-theme-bg-main rounded-3xl shadow-2xl overflow-hidden p-4">
+                <div className="h-3/4 bg-gray-200 rounded-xl mb-4 relative overflow-hidden">
+                  <Image 
+                    src="/images/premios/auto.jpg" 
+                    alt="Premio principal" 
+                    fill 
+                    sizes="(max-width: 768px) 320px, 400px"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="text-theme-text-primary font-bold text-lg">Toyota Hilux 2023</div>
+                <div className="flex justify-between items-center">
+                  <span className="text-theme-primary font-bold">S/ 100.00</span>
+                  <span className="bg-theme-highlight text-theme-text-primary text-xs px-2 py-1 rounded-full">
+                    ¡Sorteo pronto!
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
