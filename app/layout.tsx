@@ -23,8 +23,8 @@ export default function RootLayout({
       <body className={`${inter.className} bg-gray-50 m-0 p-0`}>
         {/* Header contenedor sin espacios entre elementos */}
         <header className="sticky-header">
-          {/* Banner de cuenta regresiva con mayor altura - 56px */}
-          <div className="countdown-wrapper" style={{ height: '56px' }}>
+          {/* Banner de cuenta regresiva con mayor altura - 80px */}
+          <div className="countdown-wrapper" style={{ height: '90px' }}>
             <CountdownBanner />
           </div>
 

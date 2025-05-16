@@ -1,7 +1,6 @@
 // app/page.tsx – Home
 import { prisma } from '@/app/lib/prisma';
 
-import ThumbnailGallery from '@/app/components/server/layout/ThumbnailGallery';
 import HeroSection      from '@/app/components/server/layout/HeroSection';
 import SorteoCard       from '@/app/components/client/sorteos/SorteoCard';
 import SocialBanner     from '@/app/components/client/sections/SocialBanner';
@@ -31,10 +30,7 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Galería miniaturas */}
-      <div className="mt-3">
-        <ThumbnailGallery />
-      </div>
+
 
       {/* Hero principal */}
       <HeroSection />

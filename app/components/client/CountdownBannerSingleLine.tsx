@@ -34,7 +34,8 @@ export default function CountdownBannerSingleLine({
   const days = Math.floor(diff / 1000 / 60 / 60 / 24);
 
   return (
-    <div className="relative w-full h-full flex items-center bg-gradient-to-r from-sp-indigo via-sp-blue to-sp-cyan py-3">
+      <div className="relative w-full h-full flex items-center bg-gradient-to-r from-sp-indigo via-sp-blue to-sp-cyan py-4">
+
       {/* Confetti floating effect - absolute positioned */}
       <div className="confetti-container absolute inset-0">
         {Array.from({ length: 30 }).map((_, i) => (
@@ -69,7 +70,7 @@ export default function CountdownBannerSingleLine({
           <div className="flex items-end space-x-4">
             {/* Días */}
             <div className="text-center">
-              <div className="bg-white w-10 h-10 rounded flex items-center justify-center shadow-sm">
+              <div className="bg-white w-12 h-10 rounded flex items-center justify-center shadow-sm">
                 <span className="text-sp-indigo font-bold text-lg">{String(days).padStart(2, '0')}</span>
               </div>
               <span className="text-white text-[9px] font-medium block mt-1">Días</span>
