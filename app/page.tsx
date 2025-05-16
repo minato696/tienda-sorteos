@@ -1,20 +1,23 @@
-// app/page.tsx - Ajustado para espaciado estilo VAOPE
+// app/page.tsx – Home
 import { prisma } from '@/app/lib/prisma';
+
 import ThumbnailGallery from '@/app/components/server/layout/ThumbnailGallery';
-import HeroSection from '@/app/components/server/layout/HeroSection';
-import SorteoCard from '@/app/components/client/sorteos/SorteoCard';
+import HeroSection      from '@/app/components/server/layout/HeroSection';
+import SorteoCard       from '@/app/components/client/sorteos/SorteoCard';
+import SocialBanner     from '@/app/components/client/sections/SocialBanner';
+
 import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
-  /* Activos + Próximamente */
+  /* Sorteos activos + próximos */
   const sorteos = await prisma.sorteo.findMany({
-    where: { estado: { in: ['ACTIVO', 'PROXIMAMENTE'] } },
+    where:  { estado: { in: ['ACTIVO', 'PROXIMAMENTE'] } },
     orderBy: [
-      { estado: 'asc' },
-      { destacado: 'desc' },
-      { fechaSorteo: 'asc' },
+      { estado:     'asc'  },
+      { destacado:  'desc' },
+      { fechaSorteo:'asc'  },
     ],
     select: {
       id: true,
@@ -28,15 +31,15 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Galería de miniaturas con espaciado similar a VAOPE */}
+      {/* Galería miniaturas */}
       <div className="mt-3">
         <ThumbnailGallery />
       </div>
 
-      {/* Hero section */}
+      {/* Hero principal */}
       <HeroSection />
 
-      {/* Sección de sorteos */}
+      {/* Lista de sorteos */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-2">
@@ -65,17 +68,13 @@ export default async function HomePage() {
               </div>
             )}
           </div>
-
-          <div className="text-center mt-10">
-            <Link
-              href="/sorteos"
-              className="inline-block bg-sp-indigo hover:bg-opacity-90 text-white px-6 py-3 rounded-md font-semibold"
-            >
-              Ver Todos los Sorteos
-            </Link>
-          </div>
-        </div>
+ </div>
       </section>
+
+      {/* Banner de redes sociales */}
+      <div className="container mx-auto px-4 my-24">
+        <SocialBanner />
+      </div>
     </>
   );
 }
